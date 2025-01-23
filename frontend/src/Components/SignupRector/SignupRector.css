@@ -5,7 +5,7 @@ body{
     
 }
 .signup-container {
-    margin: 100px;
+    margin: 150px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -61,7 +61,7 @@ body{
   .signup-btn {
     width: 100%;
     padding: 12px;
-    background-color:rgb(115, 240, 240);
+    background-color:#e6faff;
     color:black;
     border: 1px solid #333333; 
     border-radius: 5px;

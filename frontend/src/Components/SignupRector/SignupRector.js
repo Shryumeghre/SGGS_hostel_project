@@ -6,6 +6,7 @@ const SignupRector = () => {
     name: "",
     email: "",
     mobile: "",
+    Address: "",
     position: "",
     idProof: null,
     password: "",
@@ -68,6 +69,18 @@ const SignupRector = () => {
               id="mobile"
               name="mobile"
               value={formData.mobile}
+              onChange={handleChange}
+              required
+            />
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="address">Address</label>
+            <input
+              type="text"
+              id="address"
+              name="address"
+              value={formData.address}
               onChange={handleChange}
               required
             />
