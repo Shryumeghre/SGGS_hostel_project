@@ -2,7 +2,7 @@ require("dotenv").config();
 const connectDb = require('./utils/db');
 const cors = require('cors');
 const express = require("express");
-const authRoutes = require("./routes/auth");
+const rectorRoutes = require("./routes/rectorRoutes");
 const path = require('path');
 
 const app = express(); 
@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-app.use("/auth", authRoutes);
+app.use("/auth", rectorRoutes);
 
 connectDb().then(() => {
     app.listen(PORT, () => {
