@@ -1,4 +1,5 @@
 const Rector = require("../models/Rector");
+// const bcrypt = require("bcrypt");
 
 const signupRector = async (req, res) => {
   const { name, email, mobile, address, password, confirmPassword, role } = req.body;
@@ -8,7 +9,6 @@ const signupRector = async (req, res) => {
   }
 
   try {
-
     const existingUser = await Rector.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already exists" });
@@ -20,7 +20,7 @@ const signupRector = async (req, res) => {
       mobile,
       address,
       idProof: req.file.filename,
-      password,
+      password, 
       role,
     });
 
