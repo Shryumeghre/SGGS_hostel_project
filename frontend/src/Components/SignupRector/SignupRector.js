@@ -7,10 +7,10 @@ const SignupRector = () => {
     email: "",
     mobile: "",
     Address: "",
-    position: "",
     idProof: null,
     password: "",
-    confirmPassword: ""
+    confirmPassword: "",
+    role: "rector"
   });
 
   const handleChange = (e) => {
@@ -28,8 +28,37 @@ const SignupRector = () => {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
+    const form = new FormData();
+    form.append("name", formData.name);
+    form.append("email", formData.email);
+    form.append("mobile", formData.mobile);
+    form.append("address", formData.address);
+    form.append("password", formData.password);
+    form.append("confirmPassword", formData.confirmPassword);
+    form.append("role", formData.role);
+    form.append("idProof", formData.idProof);
+
+    try {
+      const response = await fetch("http://localhost:5001/auth/signup", {
+        method: "POST",
+        body: form
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log("User registered successfully:", data);
+        alert("User registered successfully");
+      } else {
+        console.error("Error:", data);
+        alert("Error: " + data.message);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Server error");
+    }
     console.log(formData);
   };
 
@@ -87,15 +116,18 @@ const SignupRector = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="position">Position</label>
-            <input
-              type="text"
-              id="position"
-              name="position"
-              value={formData.position}
+            <label htmlFor="role">Role</label>
+            <select
+              id="role"
+              name="role"
+              value={formData.role}
               onChange={handleChange}
               required
-            />
+            >
+              <option value="rector">Rector</option>
+              <option value="warden">Warden</option>
+              <option value="guard">Guard</option>
+            </select>
           </div>
 
           <div className="form-group">

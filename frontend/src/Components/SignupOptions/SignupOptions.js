@@ -12,11 +12,11 @@ function SignupOptions({ onClose }) {
             Signup as Student
           </Link>
           <Link to="/SignupRector" className="signup-link">
-            Signup as Rector/Warden
+            Signup as Rector/Warden/Guard
           </Link>
-          <Link to="/SignupGuard" className="signup-link">
+          {/* <Link to="/SignupGuard" className="signup-link">
             Signup as Guard
-          </Link>
+          </Link> */}
         </div>
         <button className="close-btn" onClick={onClose}>
           Close
