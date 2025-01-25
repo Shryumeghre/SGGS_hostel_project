@@ -17,7 +17,7 @@ const SignupRector = () => {
     const { name, value } = e.target;
     setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value ///[e.target.name]:e.target.value
     }));
   };
 
@@ -68,7 +68,7 @@ const SignupRector = () => {
         <h2>SIGN UP</h2>
         <form onSubmit={handleSubmit}>
           <div className="form-group">
-            <label htmlFor="name">Name</label>
+            <label htmlFor="name">Name:</label>
             <input
               type="text"
               id="name"
@@ -80,7 +80,7 @@ const SignupRector = () => {
           </div>
           
           <div className="form-group">
-            <label htmlFor="email">Email Address</label>
+            <label htmlFor="email">Email Address:</label>
             <input
               type="email"
               id="email"
@@ -92,7 +92,7 @@ const SignupRector = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="mobile">Mobile Number</label>
+            <label htmlFor="mobile">Mobile Number:</label>
             <input
               type="text"
               id="mobile"
@@ -104,7 +104,7 @@ const SignupRector = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="address">Address</label>
+            <label htmlFor="address">Address:</label>
             <input
               type="text"
               id="address"
@@ -116,7 +116,7 @@ const SignupRector = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="role">Role</label>
+            <label htmlFor="role">Role:</label>
             <select
               id="role"
               name="role"
@@ -131,7 +131,7 @@ const SignupRector = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="idProof">ID Proof</label>
+            <label htmlFor="idProof">ID Proof:</label>
             <input
               type="file"
               id="idProof"
@@ -142,7 +142,7 @@ const SignupRector = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">Password</label>
+            <label htmlFor="password">Password:</label>
             <input
               type="password"
               id="password"
@@ -154,7 +154,7 @@ const SignupRector = () => {
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmPassword">Confirm Password</label>
+            <label htmlFor="confirmPassword">Confirm Password:</label>
             <input
               type="password"
               id="confirmPassword"

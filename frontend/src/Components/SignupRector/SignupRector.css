@@ -92,4 +92,8 @@ body{
       font-size: 15px;
     }
   }
-  
+  #role{
+    padding:9px;
+    border-radius:5px;
+    border: 1px solid #333333;
+  }
