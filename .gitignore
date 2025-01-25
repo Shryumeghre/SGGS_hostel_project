@@ -5,6 +5,7 @@ node_modules/
 *.log
 
 # Environment files
+.env
 Backend/.env
 backend/.env
 .env
@@ -14,4 +15,4 @@ frontend/build/
 # Cache files
 *.cache
 *.tmp.env 
-.env 
+
