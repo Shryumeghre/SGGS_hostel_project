@@ -56,14 +56,14 @@ const studentsSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
-    // id_card: {
-    //     type: String, // Will store the Cloudinary URL
-    //     required: true,
-    // },
-    // id_proof: {
-    //     type: String, // Will store the Cloudinary URL
-    //     required: true,
-    // },
+    id_card: {
+        type: String, // Will store the Cloudinary URL
+        //required: true,
+    },
+    id_proof: {
+        type: String, // Will store the Cloudinary URL
+        //required: true,
+    },
     permanent_addr: {
         type: String,
         required: true,

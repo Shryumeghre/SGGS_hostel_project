@@ -15,8 +15,8 @@ const RegisterForm = () => {
         hostel_fees: "",
         mess_fees: "",
         room_alloted: "",
-        // id_card: null,
-        // id_proof: null,
+        id_card: "",
+        id_proof: "",
         permanent_addr: "",
         father_name: "",
         parents_num: "",
@@ -31,37 +31,47 @@ const RegisterForm = () => {
         setFormData({ ...formData, [name]: value });
     };
 
-    // const handleFileChange = (e) => {
-    //     const { name, files } = e.target;
-    //     setFormData({ ...formData, [name]: files[0] });
-    // };
-
+    const handleFileChange = (e) => {
+        const file = e.target.files[0]; // Get the first selected file
+        if (file) {
+            setFormData((prevData) => ({
+                ...prevData,
+                [e.target.name]: file, // Add the file to the formData state under the correct field name
+            }));
+        } else {
+            console.error("No file selected");
+        }
+    };
+    
+    
     const handleNext = () => setStep(step + 1);
     const handlePrevious = () => setStep(step - 1);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(formData);
-        const formDataToSend = new FormData();
-        for (const key in formData) {
-            if (formData[key]) {
-                formDataToSend.append(key, formData[key]);
-            }
-        }
+    
+        const data = new FormData();
+        Object.entries(formData).forEach(([key, value]) => {
+            data.append(key, value); // Append each field and its value to FormData
+        });
+    
         try {
-            const response = await fetch(`http://localhost:5001/api/student/register`, {
-                method: "POST",
-                body: formDataToSend,
+            const response = await fetch('http://localhost:5001/api/student/register', {
+                method: 'POST',
+                body: data, // Use FormData as the body
             });
+    
             if (response.ok) {
-                alert("Registration Successful");
+                alert("Student Registration Successful");
             } else {
-                console.error("Registration failed", response.statusText);
+                const errorData = await response.json();
+                console.error("Registration failed", errorData);
             }
         } catch (error) {
-            console.error("register", error);
+            console.error("Error during registration:", error);
         }
     };
+    
     
 
     return (
@@ -221,7 +231,7 @@ const RegisterForm = () => {
                 {step === 3 && (
                     <div className="form-step">
                         <h2>Step 3: Additional Information</h2>
-                        {/* <label>
+                        <label>
                             ID Card (File Upload):
                             <input
                                 type="file"
@@ -240,7 +250,7 @@ const RegisterForm = () => {
                                 onChange={handleFileChange}
                                 required
                             />
-                        </label> */}
+                        </label>
                         <label>
                             Permanent Address:
                             <input
