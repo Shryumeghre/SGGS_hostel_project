@@ -8,7 +8,7 @@ function SignupOptions({ onClose }) {
       <div className="modal-box">
         <h2>Select Signup Role</h2>
         <div className="signup-buttons">
-          <Link to="/SignupStudent" className="signup-link">
+          <Link to="/RegisterForm" className="signup-link">
             Signup as Student
           </Link>
           <Link to="/SignupRector" className="signup-link">
