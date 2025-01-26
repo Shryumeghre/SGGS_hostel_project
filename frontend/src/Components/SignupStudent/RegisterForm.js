@@ -78,7 +78,7 @@ const RegisterForm = () => {
         <div className="register-form-container">
             {/* Main Heading */}
             <h1>Student Registration Form</h1>
-            <form onSubmit={handleSubmit} encType="multipart/form-data">
+            <form className="register-form" onSubmit={handleSubmit} encType="multipart/form-data">
                 {/* Step Content */}
                 {step === 1 && (
                     <div className="form-step">

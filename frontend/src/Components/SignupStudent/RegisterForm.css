@@ -20,7 +20,7 @@
     margin-bottom: 15px;
 }
 
-form {
+.register-form {
     width: 400px; /* Adjust width to control the form size */
     display: flex;
     flex-direction: column; /* Stack elements vertically */
