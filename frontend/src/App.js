@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { Link } from 'react-router-dom';
 import SignupRector from "./Components/SignupRector/SignupRector.js";
@@ -7,7 +8,7 @@ import HomePage from "./Components/HomePage/HomePage.js";
 import { BrowserRouter as Router, Route,Routes} from "react-router-dom";
 import "./App.css";
 
-function App() {
+const App = () => {
   return (
    
     <Router> 
@@ -19,11 +20,13 @@ function App() {
           <Route path="/SignupOptions" element={<SignupOptions />} />
           <Route path="/SignupRector" element={<SignupRector />} />
           <Route path="/RegisterForm" element={<RegisterForm />} />
+          <Route path="/SignupRector" element={<SignupRector />} />
+          {/* Add any other routes here */}
+          <Route path="/register" element={<RegisterForm />} />
         </Routes>
       </div>
 
     </Router>
   );
 }
-
 export default App;
