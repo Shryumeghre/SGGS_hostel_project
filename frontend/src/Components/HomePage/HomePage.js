@@ -28,7 +28,7 @@ const HomePage = () => {
           <Link to="/hostel-notices" className="nav-link">Hostel Notices</Link>
           <Link to="/facilities" className="nav-link">Facilities</Link>
           <a href="#!" onClick={openSignupOptions} className="nav-link">Signup</a>
-          <Link to="/signin" className="nav-link">Signin</Link>
+          <Link to="/login" className="nav-link">Signin</Link>
         </nav>
       </header>
 
