@@ -16,14 +16,12 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-
   }
   .college-logo {
     width: 1000px; 
     height: auto; 
     max-width: 100%; 
   }
-  
   .nav {
     margin-top: 10px;
     background-color:rgb(22, 170, 196);
@@ -33,7 +31,7 @@ body {
     padding:10px;
     border-radius: 20px;
   }
-  
+
   .nav-link {
     color:white;
     text-decoration: none;
