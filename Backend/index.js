@@ -29,7 +29,7 @@ app.use("/auth", rectorRoutes);
 connectDb().then(() => {
 
 
-const PORT = 5001;
+const PORT = 5000;
 
     app.listen(PORT, () => {
         console.log(`Server running at http://localhost:${PORT}`);
