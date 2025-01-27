@@ -13,7 +13,6 @@ const transporter = nodemailer.createTransport({
   },
 });
 
-
 const leaveForm = async (req, res) => {
   try {
     const { recipient, branch, ...leaveFormData } = req.body;
