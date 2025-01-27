@@ -68,3 +68,33 @@ This section has moved here: [https://facebook.github.io/create-react-app/docs/d
 ### `npm run build` fails to minify
 
 This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+
+Login credential for student: {
+    "email": "john.doe@example.com",
+    "password": "securePassword123"
+}
+
+
+{
+    "message": "User registered successfully",
+    "Rector": {
+        "name": "Satish",
+        "email": "satish@gmail.com",
+        "mobile": "9875747286",
+        "address": "Nanded",
+        "idProof": "idProofs/1737916720135-eyeu_single_20180528_18213257",
+        "password": "Satish@123",
+        "role": "rector",
+        "_id": "67968132adc338bff06640e9",
+        "createdAt": "2025-01-26T18:38:42.774Z",
+        "updatedAt": "2025-01-26T18:38:42.774Z",
+        "__v": 0
+    }
+}
+
+http://localhost:5001/api/login/login
+http://localhost:5001/auth/signup  ----> register as warden/rector/guard
+http://localhost:5001/api/auth/register  ----> register as students
+
