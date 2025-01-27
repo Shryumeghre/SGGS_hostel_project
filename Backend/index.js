@@ -30,8 +30,6 @@ connectDb().then(() => {
 
 
 const PORT = 5001;
-console.log('MONGO_URI:', process.env.MONGO_URI);
-console.log('PORT:', process.env.PORT);
 
     app.listen(PORT, () => {
         console.log(`Server running at http://localhost:${PORT}`);
