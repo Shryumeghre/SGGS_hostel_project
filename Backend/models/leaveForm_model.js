@@ -7,6 +7,11 @@ const leaveFormSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+    email: {
+      type: String,
+      required: true,
+      trim: true,
+    },
     roomNum: {
       type: String,
       required: true,
@@ -80,6 +85,11 @@ const leaveFormSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: ["HOD", "Rector/Warden"], // Options for recipient
+    },
+    status: {
+      type: String,
+      enum: ["pending", "accepted by HOD", "leave granted", "rejected"],
+      default: "pending",
     },
   },
   { timestamps: true } // Add createdAt and updatedAt timestamps
