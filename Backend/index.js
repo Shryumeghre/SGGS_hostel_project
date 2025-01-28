@@ -29,7 +29,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/auth", rectorRoutes);
 connectDb().then(() => {
 
-const PORT = 5000;
+const PORT = 5001;
 
     app.listen(PORT, () => {
         console.log(`Server running at http://localhost:${PORT}`);

@@ -1,10 +1,10 @@
 import React, { useState }from "react";
-import "./HomePage.css";
+import "./HomePageGuard.css";
 import { Link } from 'react-router-dom';
 import SignupOptions from "../SignupOptions/SignupOptions.js";
 // import collegeLogo from "./collegeLogo.png";
 
-const HomePage = () => {
+const HomePageGuard = () => {
   const [showSignupOptions, setShowSignupOptions] = useState(false);
   const openSignupOptions = () => {
     setShowSignupOptions(true);
@@ -35,14 +35,14 @@ const HomePage = () => {
       {showSignupOptions && <SignupOptions onClose={closeSignupOptions} />}
 
       <main className="container">
-      <h1>HomePage</h1>
-        {/* <section className="section attendance-section">
+      <h1> Guard Section</h1>
+        <section className="section attendance-section">
           <h2 className="section-title">Attendance</h2>
-          <p>Mark your attendance for today:</p>
-          <button className="primary-button">Mark Attendance</button>
+          <p></p>
+          <button className="primary-button">Check Attendance</button>
         </section>
 
-        <section className="section leaving-section">
+        {/* <section className="section leaving-section">
           <h2 className="section-title">Leaving Form</h2>
           <p>Submit your leave request:</p>
           <button className="primary-button">Fill Leaving Form</button>
@@ -96,4 +96,4 @@ const HomePage = () => {
   );
 };
 
-export default HomePage;
+export default HomePageGuard;

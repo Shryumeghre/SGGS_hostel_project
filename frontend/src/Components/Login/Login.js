@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom"; // Ensure you use react-router-dom for navigation
 import "./Login.css";
-import HomePage from "../HomePage/HomePage.js";
+// import HomePage from "../HomePage/HomePage.js";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -20,13 +20,28 @@ const LoginPage = () => {
         },
         body: JSON.stringify({ email, password }),
       });
-
+    
       if (response.ok) {
         const data = await response.json();
         console.log("Login successful:", data);
+        const role = data.user.role;
 
-        // Redirect to HomePage
-        navigate("/HomePage");
+        console.log("User Role:", role); // This will log the role (e.g., "student" or "rector")
+                localStorage.setItem("role", role);
+        if (data.user && data.user.email) {
+          const { email } = data.user; // Destructure email from 'user' object
+  
+          // Save the email in localStorage
+          localStorage.setItem("email", email);
+          console.log("Email saved to localStorage:", localStorage.getItem("email"));
+        }
+        if (role === "student") {
+          navigate("/HomePageStudent");
+        } else if (role === "guard") {
+          navigate("/HomePageGuard");
+        } else if (role === "rector" || role=="warden") {
+          navigate("/HomePageRector");
+        }
       } else {
         const errorData = await response.json();
         setError(errorData.message || "Login failed. Please try again.");

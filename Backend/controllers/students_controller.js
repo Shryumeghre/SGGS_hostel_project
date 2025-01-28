@@ -1,6 +1,6 @@
 const students_model = require("../models/students_model");
 const bcrypt = require("bcryptjs");
-const {uploadOnCloudinary} = require("../utils/cloudinary.js");
+const { uploadOnCloudinary } = require("../utils/cloudinary.js");
 
 const register = async (req, res) => {
   try {
@@ -8,24 +8,33 @@ const register = async (req, res) => {
     console.log("Request Body:", req.body);
     console.log("Uploaded Files:", req.files);
 
-    // Initialize URLs
+    // Initialize URLs for the uploaded files
     let idCardUrl = null;
     let idProofUrl = null;
 
-    // Upload files to Cloudinary
-    if (req.files && req.files["id_card"]) {
+    // Upload id_card if provided
+    if (req.files && req.files["id_card"] && req.files["id_card"].length > 0) {
+      console.log("Uploading id_card...");
       const idCardFilePath = req.files["id_card"][0].path; // Local file path
       const idCardUpload = await uploadOnCloudinary(idCardFilePath);
       idCardUrl = idCardUpload?.url; // Cloudinary URL
+      console.log("id_card uploaded:", idCardUrl);
+    } else {
+      console.log("No id_card file provided.");
     }
 
-    if (req.files && req.files["id_proof"]) {
+    // Upload id_proof if provided
+    if (req.files && req.files["id_proof"] && req.files["id_proof"].length > 0) {
+      console.log("Uploading id_proof...");
       const idProofFilePath = req.files["id_proof"][0].path; // Local file path
       const idProofUpload = await uploadOnCloudinary(idProofFilePath);
       idProofUrl = idProofUpload?.url; // Cloudinary URL
+      console.log("id_proof uploaded:", idProofUrl);
+    } else {
+      console.log("No id_proof file provided.");
     }
 
-    // Extract other form fields
+    // Extract other form fields from the request body
     const {
       username,
       reg_no,
@@ -39,8 +48,6 @@ const register = async (req, res) => {
       hostel_fees,
       mess_fees,
       room_alloted,
-      id_card, // Save Cloudinary URL
-      id_proof,
       permanent_addr,
       father_name,
       parents_num,
@@ -53,10 +60,10 @@ const register = async (req, res) => {
       return res.status(400).json({ message: "Required fields are missing." });
     }
 
-    // Encrypt password
+    // Encrypt password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create a new student record
+    // Create a new student record in the database
     const studentCreated = await students_model.create({
       username,
       reg_no,
@@ -70,8 +77,8 @@ const register = async (req, res) => {
       hostel_fees,
       mess_fees,
       room_alloted,
-      id_card: idCardUrl, // Save Cloudinary URL
-      id_proof: idProofUrl, // Save Cloudinary URL
+      id_card: idCardUrl, // Save Cloudinary URL for the id card
+      id_proof: idProofUrl, // Save Cloudinary URL for the id proof
       permanent_addr,
       father_name,
       parents_num,
@@ -79,7 +86,7 @@ const register = async (req, res) => {
       password: hashedPassword
     });
 
-    // Respond with success
+    // Respond with success message and include a JWT token
     res.status(201).json({
       msg: "Registration Successful",
       token: await studentCreated.generateToken(),
@@ -90,6 +97,5 @@ const register = async (req, res) => {
     res.status(500).json({ error: "Internal Server Error", details: error.message });
   }
 };
-
 
 module.exports = { register };

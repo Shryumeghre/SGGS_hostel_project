@@ -1,5 +1,5 @@
 import React, { useState }from "react";
-import "./HomePage.css";
+import "./HomePageStudent.css";
 import { Link } from 'react-router-dom';
 import SignupOptions from "../SignupOptions/SignupOptions.js";
 // import collegeLogo from "./collegeLogo.png";
@@ -35,8 +35,8 @@ const HomePage = () => {
       {showSignupOptions && <SignupOptions onClose={closeSignupOptions} />}
 
       <main className="container">
-      <h1>HomePage</h1>
-        {/* <section className="section attendance-section">
+            <h1>Student Section</h1>
+        <section className="section attendance-section">
           <h2 className="section-title">Attendance</h2>
           <p>Mark your attendance for today:</p>
           <button className="primary-button">Mark Attendance</button>
@@ -46,7 +46,7 @@ const HomePage = () => {
           <h2 className="section-title">Leaving Form</h2>
           <p>Submit your leave request:</p>
           <button className="primary-button">Fill Leaving Form</button>
-        </section> */}
+        </section>
 
         <section className="section notices-section">
           <h2 className="section-title">Hostel Notices</h2>
