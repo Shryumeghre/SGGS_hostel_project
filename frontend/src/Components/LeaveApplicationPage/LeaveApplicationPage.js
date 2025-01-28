@@ -8,21 +8,22 @@ const LeaveApplicationPage = () => {
   const [selectedApplication, setSelectedApplication] = useState(null);
 
   useEffect(() => {
-    const socket = io('http://localhost:5001'); // Update with backend URL
+    const socket = io('http://localhost:5001');
 
     const fetchApplications = async () => {
-      try {
-        const response = await fetch('http://localhost:5001/api'); // Replace with actual endpoint
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
+        try {
+          const response = await fetch('http://localhost:5001/api'); // Replace with your actual endpoint
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const data = await response.json();
+          console.log('Fetched applications:', data); // Debug log
+          setApplications(data);
+        } catch (error) {
+          console.error('Error fetching applications:', error);
+          setError('Failed to fetch applications. Please try again later.');
         }
-        const data = await response.json();
-        setApplications(data);
-      } catch (error) {
-        setError('Failed to fetch applications. Please try again later.');
-        console.error('Error fetching applications:', error);
-      }
-    };
+      };
 
     fetchApplications();
 
@@ -105,6 +106,9 @@ const LeaveApplicationPage = () => {
             <h2>Leave Application Details</h2>
             <p><strong>Name:</strong> {selectedApplication.name}</p>
             <p><strong>Registration Number:</strong> {selectedApplication.regNo}</p>
+            <p><strong>Branch:</strong> {selectedApplication.branch}</p>
+            <p><strong>Contact Number:</strong> {selectedApplication.phoneNum}</p>
+            <p><strong>Room Number:</strong> {selectedApplication.roomNum}</p>
             <p><strong>Status:</strong> {selectedApplication.status}</p>
             <p><strong>Reason:</strong> {selectedApplication.reasonOfLeave}</p>
             <p><strong>Start Date:</strong> {selectedApplication.departure.date}</p>

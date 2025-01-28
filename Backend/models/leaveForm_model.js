@@ -92,7 +92,6 @@ const leaveFormSchema = new mongoose.Schema(
       default: "pending",
     },
   },
-  { timestamps: true } // Add createdAt and updatedAt timestamps
 );
 
 const LeaveForm = mongoose.model("LeaveForm", leaveFormSchema);
