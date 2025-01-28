@@ -1,10 +1,11 @@
 import React, { useState }from "react";
 import "./HomePageRector.css";
-import { Link } from 'react-router-dom';
+import { Link ,useNavigate} from 'react-router-dom';
 import SignupOptions from "../SignupOptions/SignupOptions.js";
 // import collegeLogo from "./collegeLogo.png";
 
 const HomePageRector = () => {
+  const navigate = useNavigate();
   const [showSignupOptions, setShowSignupOptions] = useState(false);
   const openSignupOptions = () => {
     setShowSignupOptions(true);
@@ -45,7 +46,7 @@ const HomePageRector = () => {
         <section className="section leaving-section">
           <h2 className="section-title">Leaving Form</h2>
           {/* <p>Submit your leave request:</p> */}
-          <button className="primary-button">check all Leaving Forms</button>
+          <button className="primary-button" onClick={()=> navigate('/LeaveApplicationPage')}>check all Leaving Forms</button>
         </section>
 
         <section className="section notices-section">

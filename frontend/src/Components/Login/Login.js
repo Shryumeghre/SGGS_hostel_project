@@ -39,7 +39,7 @@ const LoginPage = () => {
           navigate("/HomePageStudent");
         } else if (role === "guard") {
           navigate("/HomePageGuard");
-        } else if (role === "rector" || role=="warden") {
+        } else if (role === "rector" || role==="warden") {
           navigate("/HomePageRector");
         }
       } else {
