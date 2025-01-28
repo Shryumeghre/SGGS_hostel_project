@@ -97,4 +97,8 @@ Login credential for student: {
 http://localhost:5001/api/login/login
 http://localhost:5001/auth/signup  ----> register as warden/rector/guard
 http://localhost:5001/api/auth/register  ----> register as students
+http://localhost:5001/api/submit ---> leave form
+http://localhost:5001/api/approveByRector/6797c7a2dd4f1a1ba1c53bde --> Approved by rector
+ http://localhost:5001/api/approveByHOD/6797c60a937ed387c91be61a --> Approved by hod
 
+https://coolors.co/palettes/popular/gradient
