@@ -6,33 +6,27 @@ const rector_models = require("../models/Rector");
 const login = async (req, res) => {
     try {
         const { email, password } = req.body;
-
         // Check if email and password are provided
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required." });
         }
-
         // Find user in student models
         let user = await student_models.findOne({ email });
         let role = "student";
-
         // If not found, find user in rector models
         if (!user) {
             user = await rector_models.findOne({ email });
             role = user ? user.role : null;
         }
-
         // If user not found
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
-
         // Compare passwords
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid credentials." });
         }
-
         // Generate JWT token
         const token = jwt.sign(
             {
