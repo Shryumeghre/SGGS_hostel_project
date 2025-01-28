@@ -1,12 +1,15 @@
-
+/* Global Styles */
 body {
     margin: 0;
     font-family: 'Arial', sans-serif;
     background-color: #f5faff;
     color: #333;
+    font-size: 16px; /* Base font size */
   }
+  
+  /* Header Section */
   .header {
-    background-color:rgb(17, 211, 211);
+    background-color: rgb(17, 211, 211);
     color: white;
     padding: 20px 10px;
     text-align: center;
@@ -17,27 +20,29 @@ body {
     align-items: center;
     justify-content: center;
   }
+  
   .college-logo {
-    width: 1000px; 
-    height: auto; 
-    max-width: 100%; 
+    width: 100%;
+    height: auto;
+    max-width: 300px; /* Limit max size for larger screens */
+    display: block;
   }
+  
+  /* Navigation Styles */
   .nav {
     margin-top: 10px;
-    background-color:rgb(22, 170, 196);
+    background-color: rgb(22, 170, 196);
     display: flex;
-    justify-content: center;
-    gap: 15px;
-    padding:10px;
+    justify-content: space-around;
+    padding: 10px;
     border-radius: 20px;
   }
-
+  
   .nav-link {
-    color:white;
+    color: white;
     text-decoration: none;
     padding: 5px 15px;
     border-radius: 5px;
-    /* border: 1px solid #ddd; */
     transition: background 0.3s ease;
   }
   
@@ -46,13 +51,14 @@ body {
     color: white;
   }
   
-
+  /* Container for Sections */
   .container {
     width: 90%;
     max-width: 1200px;
     margin: 20px auto;
   }
   
+  /* Section Styles */
   .section {
     background-color: #ffffff;
     margin: 20px 0;
@@ -66,7 +72,7 @@ body {
     margin-bottom: 10px;
     color: #007acc;
   }
-
+  
   .primary-button {
     background-color: #007acc;
     color: white;
@@ -82,19 +88,7 @@ body {
     background-color: #005fa3;
   }
   
-  .notices-list {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .notice-item {
-    background-color: #f9f9f9;
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    margin-bottom: 5px;
-  }
-
+  /* Facilities Grid */
   .facilities-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -111,11 +105,102 @@ body {
   .facility-text {
     margin-top: 10px;
   }
-
+  
+  /* Footer Styles */
   .footer {
     text-align: center;
     padding: 10px 0;
     background-color: #007acc;
     color: white;
+  }
+  
+  /* Mobile-first Responsive Styles */
+  @media (max-width: 768px) {
+    /* Make navigation links stack vertically */
+    .nav {
+      flex-direction: column;
+      gap: 10px;
+    }
+  
+    /* Make logo scale for mobile screens */
+    .college-logo {
+      width: 80%;
+      max-width: 250px; /* Smaller max width for mobile */
+    }
+  
+    /* Container adjustments for small screens */
+    .container {
+      width: 95%; /* Maximize container width on mobile */
+    }
+  
+    /* Section title adjustments */
+    .section-title {
+      font-size: 1.2rem; /* Adjust font size */
+    }
+  
+    /* Button adjustments */
+    .primary-button {
+      font-size: 1rem; /* Increase button size for easy tap */
+      padding: 12px 25px;
+    }
+  
+    /* Facilities grid adjustments for smaller screens */
+    .facilities-grid {
+      grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Smaller grid items */
+    }
+  
+    .facility-image {
+      width: 80px;
+      height: 80px;
+    }
+  
+    /* Reduce font size for better readability on small devices */
+    body {
+      font-size: 14px;
+    }
+  
+    /* Modify footer for small screens */
+    .footer {
+      padding: 15px 0; /* Increase padding for footer */
+    }
+  }
+  
+  /* Large Mobile/Tablet Styles */
+  @media (max-width: 480px) {
+    /* Further reduce logo size on very small screens */
+    .college-logo {
+      width: 70%;
+      max-width: 200px;
+    }
+  
+    /* Adjust the font sizes for readability */
+    .section-title {
+      font-size: 1rem;
+    }
+  
+    .primary-button {
+      font-size: 0.9rem; /* Slightly smaller button */
+      padding: 10px 20px;
+    }
+  
+    .facilities-grid {
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); /* Very small grid items */
+    }
+  
+    .facility-image {
+      width: 60px;
+      height: 60px;
+    }
+  
+    /* Body font adjustments for small screens */
+    body {
+      font-size: 13px;
+    }
+  
+    /* Adjust navigation menu for very small screens */
+    .nav {
+      flex-direction: column;
+      gap: 8px;
+    }
   }
   

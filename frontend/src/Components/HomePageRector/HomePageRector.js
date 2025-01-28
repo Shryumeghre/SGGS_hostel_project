@@ -49,7 +49,7 @@ const HomePageRector = () => {
         </section>
 
         <section className="section notices-section">
-          <h2 className="section-title">Hostel Notices</h2>
+          <h2 className="section-title">Post Hostel Notices</h2>
           <ul className="notices-list">
             <p>post here hostel notices:</p>
             <li className="notice-item">Notice 1: Important meeting at 5 PM.</li>
