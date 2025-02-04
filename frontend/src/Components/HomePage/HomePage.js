@@ -1,4 +1,4 @@
-import React, { useState }from "react";
+import React, { useState,useEffect}from "react";
 import "./HomePage.css";
 import { Link } from 'react-router-dom';
 import SignupOptions from "../SignupOptions/SignupOptions.js";
@@ -6,6 +6,17 @@ import SignupOptions from "../SignupOptions/SignupOptions.js";
 
 const HomePage = () => {
   const [showSignupOptions, setShowSignupOptions] = useState(false);
+   const [notices, setNotices] = useState([]);
+
+     useEffect(() => {
+       const fetchNotices = async () => {
+         const response = await fetch("http://localhost:5001/api/notices/All");
+         const data = await response.json();
+         setNotices(data);
+       };
+   
+       fetchNotices();
+     }, []);
   const openSignupOptions = () => {
     setShowSignupOptions(true);
   };
@@ -48,13 +59,16 @@ const HomePage = () => {
           <button className="primary-button">Fill Leaving Form</button>
         </section> */}
 
-        <section className="section notices-section">
+<section className="section notices-section">
           <h2 className="section-title">Hostel Notices</h2>
-          <ul className="notices-list">
-            <li className="notice-item">Notice 1: Important meeting at 5 PM.</li>
-            <li className="notice-item">Notice 2: Hostel cleanup drive on Sunday.</li>
-            <li className="notice-item">Notice 3: New rules for late-night entries.</li>
-          </ul>
+          <ul>
+        {notices.map((notice) => (
+          <li key={notice._id}>
+            <h3>{notice.title}</h3>
+            <small>{new Date(notice.createdAt).toLocaleString()}</small>
+          </li>
+        ))}
+      </ul>
         </section>
 
         <section className="section facilities-section">

@@ -1,5 +1,5 @@
 
-import React from "react";
+import Reactgit  from "react";
 // import { Link } from 'react-router-dom';
 import SignupRector from "./Components/SignupRector/SignupRector.js";
 import RegisterForm from "./Components/SignupStudent/RegisterForm.js";
