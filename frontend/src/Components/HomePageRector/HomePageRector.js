@@ -21,7 +21,7 @@ const HomePageRector = () => {
     e.preventDefault();
     if (!title) return alert("Title cannot be empty");
 
-    const response = await fetch("http://localhost:5001/api/notices/add", {
+    const response = await fetch("http://localhost:5001/api/notices/Add", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ title }),
@@ -73,7 +73,7 @@ const HomePageRector = () => {
         <section className="section attendance-section">
           <h2 className="section-title">Attendance</h2>
           {/* <p></p> */}
-          <button className="primary-button">Check Attendance</button>
+          <button className="primary-button" onClick={()=> navigate('/status-track')}>Check Attendance</button>
         </section>
 
         <section className="section leaving-section">

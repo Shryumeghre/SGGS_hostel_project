@@ -26,12 +26,11 @@ const LoginPage = () => {
         console.log("Login successful:", data);
         const role = data.user.role;
 
-        console.log("User Role:", role); // This will log the role (e.g., "student" or "rector")
+        console.log("User Role:", role); 
                 localStorage.setItem("role", role);
         if (data.user && data.user.email) {
-          const { email } = data.user; // Destructure email from 'user' object
+          const { email } = data.user; 
   
-          // Save the email in localStorage
           localStorage.setItem("email", email);
           console.log("Email saved to localStorage:", localStorage.getItem("email"));
         }
@@ -39,7 +38,7 @@ const LoginPage = () => {
           navigate("/HomePageStudent");
         } else if (role === "guard") {
           navigate("/HomePageGuard");
-        } else if (role === "rector" || role==="warden") {
+        } else if (role === "rector" || role === "warden") {
           navigate("/HomePageRector");
         }
       } else {

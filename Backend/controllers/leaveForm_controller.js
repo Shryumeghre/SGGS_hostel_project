@@ -260,4 +260,18 @@ const getAllLeaveForms = async (req, res) => {
   }
 };
 
-module.exports = { leaveForm, approveByHOD, approveByRector, rejectForm ,getAllLeaveForms };
+
+const getLeaveStatus = async (req, res) => {
+  const { userId } = req.params;
+  try {
+    const status = await Status.findOne({ userId });  
+    if (!status) {
+      return res.status(404).json({ message: "No status found" });
+    }
+    res.json(status);
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching status", error });
+  }
+};
+
+module.exports = { leaveForm, approveByHOD, approveByRector, rejectForm ,getAllLeaveForms, getLeaveStatus };

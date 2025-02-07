@@ -3,7 +3,7 @@
     justify-content: center; /* Horizontally center */
     align-items: center; /* Vertically center */
     height: 100vh; /* Full viewport height */
-    background-color: #f0f7f7; /* Optional: light background color */
+    background-color: #fbf8cc; /* Optional: light background color */
 }
 
 .register-form-container h1 {

@@ -2,11 +2,11 @@
 body {
     margin: 0;
     font-family: 'Arial', sans-serif;
-    background-color: #f5faff;
+    background-color: #fbf8cc;
     color: #333;
   }
   .header {
-    background-color:rgb(17, 211, 211);
+    background-color:#fdffb6;
     color: white;
     padding: 20px 10px;
     text-align: center;
@@ -24,7 +24,7 @@ body {
   }
   .nav {
     margin-top: 10px;
-    background-color:rgb(22, 170, 196);
+    background-color:#BE9244;
     display: flex;
     justify-content: center;
     gap: 15px;
@@ -115,7 +115,7 @@ body {
   .footer {
     text-align: center;
     padding: 10px 0;
-    background-color: #007acc;
+    background-color: #74c69d;
     color: white;
   }
   
