@@ -18,31 +18,26 @@ const leaveForm = async (req, res) => {
   try {
     const { recipient, branch, ...leaveFormData } = req.body;
 
-    // Save leave form to the database, including recipient and branch
+    // Save leave form to the database
     const leaveForm = new LeaveForm({ ...leaveFormData, recipient, branch });
     await leaveForm.save();
 
     let recipientEmails = [];
+    let approveApiUrl = ""; // To store the correct approval link
 
-    // Determine recipient emails based on the recipient type
+    // Determine recipient emails and approval link based on recipient type
     if (recipient === "HOD") {
       const hodEmail = hodEmails[branch]; // Get HOD email based on branch
       if (!hodEmail) {
         return res.status(400).json({ message: "HOD email not found for branch" });
       }
       recipientEmails.push(hodEmail);
-    } else if (recipient === "Rector/Warden") {
-      const rolesToFetch = ["rector", "warden"];
-      // const users = await RectorModel.find({ role: { $in: rolesToFetch } }).select("email");
-      // console.log(users); // Log to verify the fetched users
-
+      approveApiUrl = `http://localhost:5001/api/approveByHOD/${leaveForm._id}`;
+    } else if (recipient === "Rector-Warden") {
       const users = await RectorModel.find({ role: { $in: ["rector", "warden"] } });
-      console.log(users); // Log to verify the fetched users
-
-
       const emails = users.map((user) => user.email);
       recipientEmails = recipientEmails.concat(emails);
-      console.log("Recipient Emails:", recipientEmails);
+      approveApiUrl = `http://localhost:5001/api/approveByRector/${leaveForm._id}`;
     } else {
       return res.status(400).json({ message: "Invalid recipient" });
     }
@@ -51,29 +46,26 @@ const leaveForm = async (req, res) => {
       return res.status(400).json({ message: "No recipient emails found" });
     }
 
-    // Prepare email content
+    // Prepare email content with correct approval link
     const emailSubject = "Leave Form Request";
     const emailBody = `
       <h3>Leave Form Request</h3>
       <p><strong>Name:</strong> ${leaveFormData.name}</p>
       <p><strong>Room Number:</strong> ${leaveFormData.roomNum}</p>
       <p><strong>Branch:</strong> ${branch}</p>
-      <p><strong>Registration Number:</strong> ${leaveFormData.regNo}</p>
-      <p><strong>Phone Number:</strong> ${leaveFormData.phoneNum}</p>
       <p><strong>Reason for Leave:</strong> ${leaveFormData.reasonOfLeave}</p>
-      <p><strong>Duration of Leave:</strong> ${leaveFormData.durationOfLeave}</p>
       <p><strong>Departure Date & Time:</strong> ${leaveFormData.departure.date}, ${leaveFormData.departure.time}</p>
       <p><strong>Arrival Date & Time:</strong> ${leaveFormData.arrival.date}, ${leaveFormData.arrival.time}</p>
-      <p><strong>Parent's Number:</strong> ${leaveFormData.parentsNum}</p>
       <br />
       <p>Please review the request and take an action:</p>
-      <a href="http://localhost:5001/api/leave/approve/${leaveForm._id}">Accept</a> | 
-      <a href="http://localhost:5001/api/leave/reject/${leaveForm._id}">Reject</a>
+      <a href="${approveApiUrl}">Accept</a> |
+      <a href="http://localhost:3000/reject/${leaveForm._id}?role=${recipient}">Reject as ${recipient}</a>
+
     `;
 
     // Send email
     await transporter.sendMail({
-      from: process.env.EMAIL, // Use the email from environment variable
+      from: process.env.EMAIL,
       to: recipientEmails,
       subject: emailSubject,
       html: emailBody,
@@ -135,12 +127,11 @@ const approveByHOD = async (req, res) => {
       <p><strong>Status:</strong> ${leaveForm.status}</p>
       <br />
       <p>Please take an action:</p>
-      <a href="http://localhost:5001/api/leave/approveByRector/${leaveForm._id}">Accept</a> |
-      <a href="http://localhost:5001/api/leave/rejectByRector/${leaveForm._id}">Reject</a>
+      <a href="http://localhost:5001/api/approveByRector/${leaveForm._id}">Accept</a> |
+      <a href="http://localhost:3000/reject/${leaveForm._id}?role=Rector-Warden">Reject</a>
     `;
-
     await transporter.sendMail({
-      from: process.env.EMAIL, // Ensure you have EMAIL set in your environment variables
+      from: process.env.EMAIL, // Ensure you have Email set in your environment variables
       to: rectorEmails,
       subject: emailSubject,
       html: emailBody,
@@ -207,37 +198,47 @@ const approveByRector = async (req, res) => {
 
 const rejectForm = async (req, res) => {
   try {
-    const { formId, role } = req.params; // Form ID and role from URL
+    const { formId } = req.params;
+    const { role } = req.body; // Get role from request body
+
+    if (!role) {
+      return res.status(400).json({ message: "Role is required" });
+    }
+
     const leaveForm = await LeaveForm.findById(formId);
 
     if (!leaveForm) {
       return res.status(404).json({ message: "Leave form not found" });
     }
 
-    if (role === "HOD" && leaveForm.recipient === "HOD") {
-      leaveForm.status = "rejected";
-    } else if (role === "Rector" && leaveForm.status === "accepted by HOD") {
-      leaveForm.status = "rejected";
+    // ✅ If HOD already approved, and Rector-Warden rejects, update status to rejected by Rector-Warden
+    if (leaveForm.status === "accepted by HOD" && (role === "Rector" || role === "Warden")) {
+      leaveForm.status = "Rejected by Rector-Warden";
+    } 
+    // ✅ If it's a normal rejection case
+    else if (leaveForm.recipient === "HOD" || leaveForm.recipient === "Rector-Warden") {
+      leaveForm.status = `Rejected by ${role}`;
     } else {
       return res.status(400).json({ message: "Invalid rejection request" });
     }
 
     await leaveForm.save();
 
-    const emailSubject = "Leave form Request: Rejected";
+    // Send email notification
+    const emailSubject = "Leave Request: Rejected";
     const emailBody = `
       <h3>Leave Form Status</h3>
       <p>Dear ${leaveForm.name},</p>
-      <p>We regret to inform you that your leave request has been rejected by the Rector. Here are the details:</p>
+      <p>Your leave request has been rejected by ${role}. Details:</p>
       <p><strong>Branch:</strong> ${leaveForm.branch}</p>
-      <p><strong>Reason for Leave:</strong> ${leaveForm.reasonOfLeave}</p>
+      <p><strong>Reason:</strong> ${leaveForm.reasonOfLeave}</p>
       <p><strong>Status:</strong> ${leaveForm.status}</p>
-      <br />
-      <p>Please contact your HOD or Rector for further clarification.</p>
+      <br/>
+      <p>Contact your HOD or Rector for more details.</p>
     `;
 
     await transporter.sendMail({
-      from: process.env.EMAIL, // Ensure you have EMAIL set in your environment variables
+      from: process.env.EMAIL,
       to: leaveForm.email,
       subject: emailSubject,
       html: emailBody,
@@ -246,8 +247,13 @@ const rejectForm = async (req, res) => {
     res.status(200).json({ message: `Leave form rejected by ${role}` });
   } catch (error) {
     console.error("Error in rejecting form:", error);
-    res.status(500).json({ message: "Error in rejecting form", error });
+    res.status(500).json({ message: "Error in rejecting form", error: error.message});
   }
 };
 
+
+
+
 module.exports = { leaveForm, approveByHOD, approveByRector, rejectForm };
+
+

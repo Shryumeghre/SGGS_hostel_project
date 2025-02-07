@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+
 const studentsSchema = new mongoose.Schema({
     username: {
         type: String,
@@ -18,6 +19,7 @@ const studentsSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
+        unique: true
     },
     dept: {
         type: String,
@@ -44,13 +46,25 @@ const studentsSchema = new mongoose.Schema({
     },
     hostel_fees: {
         type: String,
-        enum: ["Yes", "No"], // Yes or No options
+        enum: ["Full Fees", "Partially Paid", "Not Paid"],
         required: true,
+    },
+    receipt_hostel: {
+        type: String, // URL of the uploaded receipt
+        required: function () {
+            return this.hostel_fees === "Full Fees" || this.hostel_fees === "Partially Paid";
+        },
     },
     mess_fees: {
         type: String,
-        enum: ["Yes", "No"], // Yes or No options
+        enum: ["Full Fees", "Partially Paid", "Not Paid"],
         required: true,
+    },
+    receipt_mess: {
+        type: String, // URL of the uploaded receipt
+        required: function () {
+            return this.mess_fees === "Full Fees" || this.mess_fees === "Partially Paid";
+        },
     },
     room_alloted: {
         type: String,
@@ -58,11 +72,9 @@ const studentsSchema = new mongoose.Schema({
     },
     id_card: {
         type: String, // Will store the Cloudinary URL
-        //required: true,
     },
     id_proof: {
         type: String, // Will store the Cloudinary URL
-        //required: true,
     },
     permanent_addr: {
         type: String,
@@ -85,49 +97,45 @@ const studentsSchema = new mongoose.Schema({
     },
 });
 
-// bcrypt password
-// pre method has diff methods like save
-// save(method) means before middleware stores data into db, these method will run
-studentsSchema.pre("save", async function(next){
-    // console.log("pre method", this);  //data will show on terminal
-    const user = this;
 
-    if(!user.isModified('password')){
-        next(); //next() is middleware which means if password is not changed, go to next step
-    }
-    try{
-        // const saltRound = 10;// when we hash psswrd we have to set it, more large now. more complex the passowrd is 
-        const saltRound = await bcrypt.genSalt(10); //2nd method
-        const hash_password = await bcrypt.hash(user.password, saltRound);
-        user.password = hash_password;
-    }catch(error){
+
+studentsSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) return next(); // Skip hashing if password isn't modified
+
+    try {
+        // Prevent double hashing
+        if (this.password.startsWith("$2a$")) return next();
+
+        this.password = await bcrypt.hash(this.password, 10); // Hash the password correctly
+        next();
+    } catch (error) {
         next(error);
     }
-})
+});
 
-// json web token
 
-//with the help of userSchema.methods we can create many function and access on every page(controller)
-studentsSchema.methods.generateToken = async function(){
-    try{
-        return jwt.sign({
-            // these all 3's are payloads
-            userId: this._id.toString(),
-            email: this.email,
-            reg_no: this.reg_no,
-        },
-        process.env.JWT_SECRET_KEY,
-        {
-            expiresIn: "30d",
-        }
-    );
-    }catch(error){
+
+// Generate JWT token
+studentsSchema.methods.generateToken = async function () {
+    try {
+        return jwt.sign(
+            {
+                userId: this._id.toString(),
+                email: this.email,
+                reg_no: this.reg_no,
+            },
+            process.env.JWT_SECRET_KEY,
+            {
+                expiresIn: "30d",
+            }
+        );
+    } catch (error) {
         console.error(error);
     }
 };
 
-
 // Create the StudentUser model
 const StudentUser = new mongoose.model("StudentUser", studentsSchema);
+
 // Export the model
 module.exports = StudentUser;
