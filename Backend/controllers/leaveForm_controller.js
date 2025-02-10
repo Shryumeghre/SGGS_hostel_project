@@ -8,7 +8,6 @@ const RectorModel = require("../models/Rector");
 const StudentUser = require("../models/students_model");
 
 const axios = require("axios");
-
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
@@ -19,6 +18,9 @@ const transporter = nodemailer.createTransport({
 
 const leaveForm = async (req, res) => {
   try {
+    const token = req.headers.authorization?.split(" ")[1]; // Get token from request headers
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
     const studentId = req.user.userId;
     const student = await StudentUser.findById(studentId);
     if (!student) {
@@ -41,12 +43,12 @@ const leaveForm = async (req, res) => {
         return res.status(400).json({ message: "HOD email not found for branch" });
       }
       recipientEmails.push(hodEmail);
-      approveApiUrl = `http://localhost:5001/api/approveByHOD/${leaveForm._id}`;
+      approveApiUrl = `http://localhost:5001/api/approveByHOD/${leaveForm._id}?token=${token}`;
     } else if (recipient === "Rector-Warden") {
       const users = await RectorModel.find({ role: { $in: ["rector", "warden"] } });
       const emails = users.map((user) => user.email);
       recipientEmails = recipientEmails.concat(emails);
-      approveApiUrl = `http://localhost:5001/api/approveByRector/${leaveForm._id}`;
+      approveApiUrl = `http://localhost:5001/api/approveByRector/${leaveForm._id}?token=${token}`;
     } else {
       return res.status(400).json({ message: "Invalid recipient" });
     }
@@ -68,7 +70,7 @@ const leaveForm = async (req, res) => {
       <br />
       <p>Please review the request and take an action:</p>
       <a href="${approveApiUrl}">Accept</a> |
-      <a href="http://localhost:3000/reject/${leaveForm._id}?role=${recipient}">Reject as ${recipient}</a>
+      <a href="http://localhost:3000/reject/${leaveForm._id}?role=${recipient}?token=${token}">Reject as ${recipient}</a>
 
     `;
 
@@ -89,6 +91,7 @@ const leaveForm = async (req, res) => {
 
 const approveByHOD = async (req, res) => {
   try {
+     const token = req.headers.authorization?.split(" ")[1]; 
     const { formId } = req.params; // Form ID from URL
     const leaveForm = await LeaveForm.findById(formId);
 
@@ -136,8 +139,8 @@ const approveByHOD = async (req, res) => {
       <p><strong>Status:</strong> ${leaveForm.status}</p>
       <br />
       <p>Please take an action:</p>
-      <a href="http://localhost:5001/api/approveByRector/${leaveForm._id}">Accept</a> |
-      <a href="http://localhost:3000/reject/${leaveForm._id}?role=Rector-Warden">Reject</a>
+      <a href="http://localhost:5001/api/approveByRector/${leaveForm._id}?token=${token}">Accept</a> |
+      <a href="http://localhost:3000/reject/${leaveForm._id}?role=Rector-Warden&token=${token}">Reject</a>
     `;
     await transporter.sendMail({
       from: process.env.EMAIL, // Ensure you have EMAIL set in your environment variables
@@ -155,6 +158,7 @@ const approveByHOD = async (req, res) => {
 
 const approveByRector = async (req, res) => {
   try {
+  
     const { formId } = req.params; // Form ID from URL
     const leaveForm = await LeaveForm.findById(formId);
 
@@ -207,6 +211,7 @@ const approveByRector = async (req, res) => {
 
 const rejectForm = async (req, res) => {
   try {
+
     const { formId } = req.params;
     const { role } = req.body; // Get role from request body
 

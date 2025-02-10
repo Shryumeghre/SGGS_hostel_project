@@ -15,9 +15,12 @@ const RejectPage = () => {
             }
 
             try {
+                const token=localStorage.getItem("token");
                 const response = await fetch(`http://localhost:5001/api/reject/${formId}`, {
                     method: "PATCH",
-                    headers: { "Content-Type": "application/json" },
+                    headers: { 
+                         "Authorization": `Bearer ${token}`,
+                        "Content-Type": "application/json" },
                     body: JSON.stringify({ role }), // Send role in request body
                 });
 
