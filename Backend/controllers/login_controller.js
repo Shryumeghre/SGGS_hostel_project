@@ -7,30 +7,42 @@ const login = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        // Check if email and password are provided
         if (!email || !password) {
             return res.status(400).json({ message: "Email and password are required." });
         }
+
+        // Find user in student models
         let user = await student_models.findOne({ email });
         let role = "student";
- 
+
+        // If not found, find user in rector models
         if (!user) {
             user = await rector_models.findOne({ email });
-            role = user && user.role ? user.role : "unknown"; // Default to "unknown" instead of null
+            role = user ? user.role : null;
         }
 
-        if (!user.password) {
-            return res.status(500).json({ message: "User password is missing in the database." });
-        }
-        
+        // If user not found
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
 
-        const isPasswordValid = await bcrypt.compare(password, user.password);
+        // Compare passwords
+        // const isPasswordValid = await bcrypt.compare(password, user.password);
+        // console.log(password);
+        // console.log(user.password);
+        // console.log(isPasswordValid);
+
+        console.log("Entered Password:", password);
+console.log("Stored Hashed Password:", user.password);
+const isPasswordValid = await bcrypt.compare(password, user.password);
+console.log("Password Match Result:", isPasswordValid);
+
         if (!isPasswordValid) {
             return res.status(401).json({ message: "Invalid credentials." });
         }
 
+        // Generate JWT token
         const token = jwt.sign(
             {
                 userId: user._id,

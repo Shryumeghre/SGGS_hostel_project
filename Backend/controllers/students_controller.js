@@ -1,40 +1,61 @@
-const students_model = require("../models/students_model");
+const students_model = require("../models/students_model.js");
 const bcrypt = require("bcryptjs");
 const { uploadOnCloudinary } = require("../utils/cloudinary.js");
 
 const register = async (req, res) => {
   try {
-    // Log request body and files for debugging
+    // Log request body and uploaded files
     console.log("Request Body:", req.body);
     console.log("Uploaded Files:", req.files);
 
-    // Initialize URLs for the uploaded files
+    // Initialize URLs
     let idCardUrl = null;
     let idProofUrl = null;
+    let receiptHostelUrl = null;
+    let receiptMessUrl = null;
 
-    // Upload id_card if provided
-    if (req.files && req.files["id_card"] && req.files["id_card"].length > 0) {
-      console.log("Uploading id_card...");
-      const idCardFilePath = req.files["id_card"][0].path; // Local file path
+    // Upload files to Cloudinary and log responses
+    if (req.files && req.files["id_card"]) {
+      const idCardFilePath = req.files["id_card"][0].path;
+      console.log("Uploading ID Card File Path:", idCardFilePath);
+
       const idCardUpload = await uploadOnCloudinary(idCardFilePath);
-      idCardUrl = idCardUpload?.url; // Cloudinary URL
-      console.log("id_card uploaded:", idCardUrl);
-    } else {
-      console.log("No id_card file provided.");
+      console.log("Cloudinary Response for ID Card:", idCardUpload);
+
+      idCardUrl = idCardUpload?.url;
     }
 
-    // Upload id_proof if provided
-    if (req.files && req.files["id_proof"] && req.files["id_proof"].length > 0) {
-      console.log("Uploading id_proof...");
-      const idProofFilePath = req.files["id_proof"][0].path; // Local file path
+    if (req.files && req.files["id_proof"]) {
+      const idProofFilePath = req.files["id_proof"][0].path;
+      console.log("Uploading ID Proof File Path:", idProofFilePath);
+
       const idProofUpload = await uploadOnCloudinary(idProofFilePath);
-      idProofUrl = idProofUpload?.url; // Cloudinary URL
-      console.log("id_proof uploaded:", idProofUrl);
-    } else {
-      console.log("No id_proof file provided.");
+      console.log("Cloudinary Response for ID Proof:", idProofUpload);
+
+      idProofUrl = idProofUpload?.url;
     }
 
-    // Extract other form fields from the request body
+    if (req.files && req.files["receipt_hostel"]) {
+      const receiptHostelFilePath = req.files["receipt_hostel"][0].path;
+      console.log("Uploading Hostel Receipt File Path:", receiptHostelFilePath);
+
+      const receiptHostelUpload = await uploadOnCloudinary(receiptHostelFilePath);
+      console.log("Cloudinary Response for Hostel Receipt:", receiptHostelUpload);
+
+      receiptHostelUrl = receiptHostelUpload?.url;
+    }
+
+    if (req.files && req.files["receipt_mess"]) {
+      const receiptMessFilePath = req.files["receipt_mess"][0].path;
+      console.log("Uploading Mess Receipt File Path:", receiptMessFilePath);
+
+      const receiptMessUpload = await uploadOnCloudinary(receiptMessFilePath);
+      console.log("Cloudinary Response for Mess Receipt:", receiptMessUpload);
+
+      receiptMessUrl = receiptMessUpload?.url;
+    }
+
+    // Extract other form fields
     const {
       username,
       reg_no,
@@ -52,18 +73,38 @@ const register = async (req, res) => {
       father_name,
       parents_num,
       localgardian_num,
-      password
+      password,
     } = req.body;
+
+    console.log("Extracted Fields:", {
+      username,
+      reg_no,
+      email,
+      hostel_fees,
+      mess_fees,
+    });
 
     // Validate required fields
     if (!username || !email || !password) {
       return res.status(400).json({ message: "Required fields are missing." });
     }
 
-    // Encrypt password before saving
-    const hashedPassword = await bcrypt.hash(password, 10);
+    // Validate receipt conditions
+    if ((hostel_fees === "Full Fees" || hostel_fees === "Partially Paid") && !receiptHostelUrl) {
+      return res.status(400).json({ message: "Receipt for hostel fees is required." });
+    }
 
-    // Create a new student record in the database
+    if ((mess_fees === "Full Fees" || mess_fees === "Partially Paid") && !receiptMessUrl) {
+      return res.status(400).json({ message: "Receipt for mess fees is required." });
+    }
+
+    // // Encrypt password and log it (not the actual hash for security)
+    // console.log("Hashing Password...");
+    // const hashedPassword = await bcrypt.hash(password, 10);
+    // console.log("Password Hashed Successfully");
+
+    // Create a new student record
+    console.log("Creating New Student Record...");
     const studentCreated = await students_model.create({
       username,
       reg_no,
@@ -77,23 +118,26 @@ const register = async (req, res) => {
       hostel_fees,
       mess_fees,
       room_alloted,
-      id_card: idCardUrl, // Save Cloudinary URL for the id card
-      id_proof: idProofUrl, // Save Cloudinary URL for the id proof
+      id_card: idCardUrl,
+      id_proof: idProofUrl,
+      receipt_hostel: receiptHostelUrl,
+      receipt_mess: receiptMessUrl,
       permanent_addr,
       father_name,
       parents_num,
       localgardian_num,
-      password: hashedPassword
+      password,
     });
+    console.log("Student Record Created Successfully:", studentCreated);
 
-    // Respond with success message and include a JWT token
+    // Respond with success
     res.status(201).json({
       msg: "Registration Successful",
       token: await studentCreated.generateToken(),
-      userid: studentCreated._id.toString()
+      userid: studentCreated._id.toString(),
     });
   } catch (error) {
-    console.error("Error in registration:", error);
+    console.error("Error in Registration:", error);
     res.status(500).json({ error: "Internal Server Error", details: error.message });
   }
 };

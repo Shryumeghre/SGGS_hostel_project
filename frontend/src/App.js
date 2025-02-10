@@ -8,8 +8,12 @@ import HomePageGuard from "./Components/HomePageGuard/HomePageGuard.js";
 import HomePageStudent from "./Components/HomePageStudent/HomePageStudent.js";
 import LeaveApplicationPage from "./Components/LeaveApplicationPage/LeaveApplicationPage.js";
 import HomePage from "./Components/HomePage/HomePage.js";
+import FormListOfUser from "./Components/FormListOfUser/FormListOfUser.js";
+import FormDetail from "./Components/FormDetail/FormDetail.js";
 import StatusTracker from "./Components/StatusTracker/StatusTracker";  
-import Login from "./Components/Login/Login.js";
+import LeaveForm from "./Components/LeaveForm/LeaveForm.js";
+import RejectPage from "./Components/RejectForm.js";
+import LoginPage from "./Components/Login/Login.js";
 import "./App.css";
 
 const App = () => {
@@ -27,9 +31,13 @@ const App = () => {
           <Route path="/HomePageGuard" element={<HomePageGuard />} />
           <Route path="/HomePageStudent" element={<HomePageStudent />} />
           <Route path="/LeaveApplicationPage" element={<LeaveApplicationPage />} />
-          <Route path="/login" element={<Login />} />
           <Route path="/register" element={<RegisterForm />} />
-          <Route path="/status-track" element={<StatusTracker />} />  
+          <Route path="/status-track/:formId" element={<StatusTracker />} />  
+          <Route path="/login" element={<LoginPage/>} />
+          <Route path="/leaveForm" element={<LeaveForm/>} />
+          <Route path="reject/:formId" element={<RejectPage/>}/>
+          <Route path="/formlist" element={<FormListOfUser/>}/>
+          <Route path="/formDetail/:formId" element={<FormDetail/>}/>
         </Routes>
       </div>
     </Router>

@@ -26,6 +26,12 @@ const LoginPage = () => {
         console.log("Login successful:", data);
         const role = data.user.role;
 
+        const userId = data.user.id;
+        localStorage.setItem('userId', userId);
+        console.log('userId saved:', userId);
+        localStorage.setItem('token', data.token);
+        console.log('token saved:',data.token);
+
         console.log("User Role:", role); 
                 localStorage.setItem("role", role);
         if (data.user && data.user.email) {

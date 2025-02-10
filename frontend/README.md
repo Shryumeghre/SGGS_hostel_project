@@ -101,4 +101,5 @@ http://localhost:5001/api/submit ---> leave form
 http://localhost:5001/api/approveByRector/6797c7a2dd4f1a1ba1c53bde --> Approved by rector
  http://localhost:5001/api/approveByHOD/6797c60a937ed387c91be61a --> Approved by hod
 
+patch http://localhost:5001/api/reject/67a10fe08a251c2e1d0cd81f/Rector-Warden --> RejectForm
 https://coolors.co/palettes/popular/gradient

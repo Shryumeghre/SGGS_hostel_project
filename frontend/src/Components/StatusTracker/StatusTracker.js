@@ -1,15 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
 import { Stepper, Step, StepLabel, Typography, Box } from "@mui/material";
 
 const StatusTracker = () => {
   const [status, setStatus] = useState("pending");
-
-  const userId = localStorage.getItem("userId"); 
+  const { formId } = useParams();
 
   useEffect(() => {
+    const token = localStorage.getItem('token');
     const fetchStatus = async () => {
       try {
-        const response = await fetch(`http://localhost:5001/api/statuses/${userId}`); // Fetch user's status
+        const response = await fetch(`http://localhost:5001/api/statuses/${formId}`,{
+          headers: {
+            Authorization: `Bearer ${token}` // Pass the token in the request header
+          }   
+        }); // Fetch user's status
         const data = await response.json();
 
         if (data.status) {
@@ -20,10 +25,10 @@ const StatusTracker = () => {
       }
     };
 
-    if (userId) {
+    if (formId) {
       fetchStatus();
     }
-  }, [userId]);
+  }, []);
 
   const steps = ["Pending", "Accepted by HOD", "Leave Granted", "Rejected"];
   const statusIndex = steps.indexOf(status);

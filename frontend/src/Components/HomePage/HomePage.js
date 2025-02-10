@@ -1,25 +1,41 @@
-import React, { useState,useEffect}from "react";
+import React, { useState, useEffect } from "react";
 import "./HomePage.css";
 import { Link } from 'react-router-dom';
 import SignupOptions from "../SignupOptions/SignupOptions.js";
-// import collegeLogo from "./collegeLogo.png";
 
 const HomePage = () => {
   const [showSignupOptions, setShowSignupOptions] = useState(false);
-   const [notices, setNotices] = useState([]);
+  const [notices, setNotices] = useState([]); // Ensure it's an empty array initially
 
-     useEffect(() => {
-       const fetchNotices = async () => {
-         const response = await fetch("http://localhost:5001/api/notices/All");
-         const data = await response.json();
-         setNotices(data);
-       };
-   
-       fetchNotices();
-     }, []);
+  useEffect(() => {
+    const fetchNotices = async () => {
+      try {
+        const response = await fetch("http://localhost:5001/api/notices/All");
+        const data = await response.json();
+
+        // Debugging: Log the data received
+        console.log("Fetched Notices:", data);
+
+        // Ensure that 'data' is an array before setting it
+        if (Array.isArray(data)) {
+          setNotices(data);
+        } else {
+          console.error("Expected an array of notices, but received:", data);
+          setNotices([]); // Set to empty array if the data is not an array
+        }
+      } catch (error) {
+        console.error("Failed to fetch notices:", error);
+        setNotices([]); // Set to empty array in case of error
+      }
+    };
+
+    fetchNotices();
+  }, []);
+
   const openSignupOptions = () => {
     setShowSignupOptions(true);
   };
+
   const closeSignupOptions = () => {
     setShowSignupOptions(false);
   };
@@ -46,29 +62,22 @@ const HomePage = () => {
       {showSignupOptions && <SignupOptions onClose={closeSignupOptions} />}
 
       <main className="container">
-      <h1>HomePage</h1>
-        {/* <section className="section attendance-section">
-          <h2 className="section-title">Attendance</h2>
-          <p>Mark your attendance for today:</p>
-          <button className="primary-button">Mark Attendance</button>
-        </section>
+        <h1>HomePage</h1>
 
-        <section className="section leaving-section">
-          <h2 className="section-title">Leaving Form</h2>
-          <p>Submit your leave request:</p>
-          <button className="primary-button">Fill Leaving Form</button>
-        </section> */}
-
-<section className="section notices-section">
+        <section className="section notices-section">
           <h2 className="section-title">Hostel Notices</h2>
-          <ul>
-        {notices.map((notice) => (
-          <li key={notice._id}>
-            <h3>{notice.title}</h3>
-            <small>{new Date(notice.createdAt).toLocaleString()}</small>
-          </li>
-        ))}
-      </ul>
+          {notices.length === 0 ? (
+            <p>No notices available.</p>
+          ) : (
+            <ul>
+              {notices.map((notice) => (
+                <li key={notice._id}>
+                  <h3>{notice.title}</h3>
+                  <small>{new Date(notice.createdAt).toLocaleString()}</small>
+                </li>
+              ))}
+            </ul>
+          )}
         </section>
 
         <section className="section facilities-section">

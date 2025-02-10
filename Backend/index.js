@@ -6,6 +6,8 @@ const http = require('http');
 const socketIo = require('socket.io');
 const app = express(); 
 const server = http.createServer(app);
+const profileRouter= require("./controllers/profile_controller");
+const authMiddleware = require("./middlewares/authMiddleware")
 const auth_router = require("./routes/auth_router");
 const student_router = require("./routes/students_router");
 const login_router = require("./routes/login_router");
@@ -30,10 +32,11 @@ app.use(express.urlencoded({ extended: true }));
 app.use("/api/auth", auth_router);
 app.use("/api/student", student_router);
 app.use("/api/login", login_router);
-app.use("/api", leaveForm);
+app.use("/api",authMiddleware, leaveForm);
 app.use(cors());
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/auth", rectorRoutes);
+app.use("/auth", profileRouter);
 app.use("/api/notices", noticeRoutes);
 
 io.on('connection', (socket) => {

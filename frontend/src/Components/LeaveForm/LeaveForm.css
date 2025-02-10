@@ -1,0 +1,60 @@
+.leave-form-container {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  h2 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .leave-form {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .leave-form label {
+    margin: 10px 0 5px;
+    font-weight: bold;
+  }
+  
+  .leave-form input,
+  .leave-form select,
+  .leave-form textarea {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    font-size: 16px;
+  }
+  
+  .leave-form textarea {
+    resize: vertical;
+    height: 80px;
+  }
+  
+  .leave-form button {
+    background: #28a745;
+    color: white;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    font-size: 18px;
+    cursor: pointer;
+    margin-top: 15px;
+  }
+  
+  .leave-form button:hover {
+    background: #218838;
+  }
+  
+  @media (max-width: 600px) {
+    .leave-form-container {
+      width: 90%;
+    }
+  }
+  

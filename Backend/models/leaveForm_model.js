@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const leaveFormSchema = new mongoose.Schema(
   {
+    student: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "StudentUser", 
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -35,8 +40,6 @@ const leaveFormSchema = new mongoose.Schema(
     },
     regNo: {
       type: String,
-      required: true,
-      unique: true,
       trim: true,
     },
     phoneNum: {
@@ -84,11 +87,11 @@ const leaveFormSchema = new mongoose.Schema(
     recipient: {
       type: String,
       required: true,
-      enum: ["HOD", "Rector/Warden"], // Options for recipient
+      enum: ["HOD", "Rector-Warden"], // Options for recipient
     },
     status: {
       type: String,
-      enum: ["pending", "accepted by HOD", "leave granted", "rejected"],
+      enum: ["pending", "accepted by HOD", "leave granted", "Rejected by HOD", "Rejected by Rector-Warden"],
       default: "pending",
     },
   },
