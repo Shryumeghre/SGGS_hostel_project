@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import StatusTracker from "../StatusTracker/StatusTracker";  
 import axios from 'axios';
 
 const FormDetail = () => {
   const { formId } = useParams(); // Get formId from the URL
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [formData, setFormData] = useState(null);
 
   useEffect(() => {
@@ -50,7 +51,7 @@ const FormDetail = () => {
       <p><strong>Recipient:</strong> {formData.recipient}</p>
       <p><strong>Status:</strong> {formData.status}</p>
 
-      <button
+      {/* <button
         style={{
           padding: '10px 20px',
           backgroundColor: '#2196F3',
@@ -63,8 +64,10 @@ const FormDetail = () => {
         onClick={() => navigate(`/status-track/${formId}`)} // Navigate to status tracker page
       >
         Check Status
-      </button>
+      </button> */}
+     <StatusTracker/>
     </div>
+    
   );
 };
 

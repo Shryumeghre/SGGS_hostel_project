@@ -36,6 +36,7 @@ const FormList = () => {
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Departure Date</th>
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Reason</th>
             <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Action</th>
+            <th style={{ border: '1px solid #ddd', padding: '8px', textAlign: 'left' }}>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -57,6 +58,7 @@ const FormList = () => {
                     </button>
                   </Link>
                 </td>
+                <td style={{ border: '1px solid #ddd', padding: '8px' }}>{form.status}</td>
               </tr>
             ))
           )}
