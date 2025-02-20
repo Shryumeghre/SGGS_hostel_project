@@ -103,3 +103,8 @@ http://localhost:5001/api/approveByRector/6797c7a2dd4f1a1ba1c53bde --> Approved 
 
 patch http://localhost:5001/api/reject/67a10fe08a251c2e1d0cd81f/Rector-Warden --> RejectForm
 https://coolors.co/palettes/popular/gradient
+
+
+For login as a student: 
+email: purumeghare09@gmail.com
+password: saru
