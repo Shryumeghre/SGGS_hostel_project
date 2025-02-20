@@ -1,0 +1,252 @@
+
+body {
+    margin: 0;
+    font-family: 'Arial', sans-serif;
+    background-color: #caf0f8;
+    /* color: #333; */
+  }
+  .homepage{
+    background-color: #caf0f8;
+  min-height: 100vh; /* Ensure it covers the full page */
+  }
+  .header {
+  
+    background-color:#caf0f8;
+    /* color: yellow; */
+    padding: 20px 10px;
+    text-align: center;
+  }
+  
+  .logo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .college-logo {
+    width: 1000px; 
+    height: auto; 
+    max-width: 100%; 
+  }
+  .nav {
+    /* margin-top: 10px; */
+    margin: 0 auto;
+    background-color:#00b4d8;
+    width: 90%;
+    display: flex;
+    justify-content: space-around;
+    gap: 15px;
+    padding: 20px 15px; 
+    /* padding-left: 40p; */
+    border-radius: 50px;
+    gap: 20px;
+    font-size: 25px;
+    font-family:'Times New Roman', Times, serif;
+  }
+  
+  .nav-link {
+    color:white;
+    text-decoration: none;
+    /* color: #002b5c;  */
+    /* background-color: #88d498; 
+    padding: 5px 15px;
+    border-radius: 5px;
+    /* border: 1px solid #ddd; */
+    transition: background 0.3s ease;
+  }
+  
+  .nav-link:hover {
+    background-color: #005fa3;
+    color: white;
+  }
+  
+  
+  .container {
+    width: 100vw;
+    max-width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  
+  .section {
+    background-color: #caf0f8;
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 20px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+  
+  .section-title {
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+    color: #007acc;
+  }
+  
+  .primary-button {
+    background-color: #007acc;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+  }
+  
+  .primary-button:hover {
+    background-color: #005fa3;
+  }
+  
+  .notices-list {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .notice-item {
+    background-color: #f9f9f9;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 5px;
+  }
+  
+  .facilities-grid {
+    display: flex; /* Use flexbox instead of grid */
+    justify-content: space-evenly; /* Spread items evenly */
+    flex-wrap: wrap; /* Wrap items if needed */
+    padding: 20px;
+  }
+  
+  
+  .facility-image {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+  }
+  
+  .facility-text {
+    margin-top: 20px;
+  }
+  
+  .section facilities-section {
+    width: 100%;
+  }
+  
+  .footer {
+    text-align: center;
+    padding: 40px 40px;
+    background-color: #00b4d8;
+    color: white;
+  }
+  
+  .notices-section {
+    background-color: #6cc9dc;
+    width: 90%;
+    /* max-width: 900px; */
+    margin: 20px auto;
+    padding: 20px;
+    background: #9fe1ee;
+    border-radius: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+  
+  .section-title {
+    text-align: center;
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+  }
+  
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    background: #00b4d8;
+    margin-bottom: 15px;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease-in-out;
+  }
+  
+  li:hover {
+    transform: translateY(-3px);
+  }
+  
+  h3 {
+    font-size: 1.4rem;
+    color: #007bff;
+    margin-bottom: 5px;
+  }
+  
+  p {
+    font-size: 20px;
+    color: black;
+    margin-bottom: 5px;
+  }
+  
+  small {
+    font-size: 0.85rem;
+    color: black;
+  }
+  
+  .facilities-section {
+    width: 90%; /* Takes almost the full width of the viewport */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #6cc9dc; /* Keeps your background --> #9fe1ee;*/
+    border-radius: 20px; /* Optional */
+  }
+  
+  .statistics-section {
+    width: 90%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #6cc9dc; /* Black background like the reference image */
+    border-radius: 20px;
+  }
+  
+  .stat-container {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      width: 95%;
+      /* max-width: 1200px; */
+      margin: 0 auto;
+      text-align: center;
+  }
+  
+  .stat-item {
+      flex: 1;
+      color: black; /* Dark red text */
+      padding: 20px;
+      border-right: 1px solid #444; /* Divider lines */
+  }
+  
+  .stat-item:last-child {
+      border-right: none; /* Remove border from last item */
+  }
+  
+  .stat-number {
+      font-size: 2rem;
+      font-weight: bold;
+  }
+  
+  .stat-text {
+      font-size: 1rem;
+      color: black;
+  }
+
+/* Ensure elements are visible */
+.section, .facilities-section, .statistics-section {
+    opacity: 1;  /* Ensure it's not 0 */
+    visibility: visible;  /* Ensure it's not hidden */
+  }
+  
+
+  
+  
+  

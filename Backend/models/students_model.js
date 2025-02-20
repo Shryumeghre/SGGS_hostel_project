@@ -19,8 +19,11 @@ const studentsSchema = new mongoose.Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        trim: true, // Removes leading/trailing spaces
+        lowercase: true, // Ensures emails are case-insensitive
     },
+    
     dept: {
         type: String,
         required: true,

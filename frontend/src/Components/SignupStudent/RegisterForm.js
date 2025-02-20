@@ -13,12 +13,12 @@ const RegisterForm = () => {
         phone: "",
         hostel: "",
         hostel_fees: "",
-        receipt_hostel: "",
+        receipt_hostel: null,
         mess_fees: "",
-        receipt_mess: "",
+        receipt_mess: null,
         room_alloted: "",
-        id_card: "",
-        id_proof: "",
+        id_card: null,
+        id_proof: null,
         permanent_addr: "",
         father_name: "",
         parents_num: "",
@@ -26,6 +26,7 @@ const RegisterForm = () => {
         password: "",
     });
 
+    const [errors, setErrors] = useState({}); // ✅ Define errors state
     const [step, setStep] = useState(1);
 
     const handleChange = (e) => {
@@ -40,8 +41,6 @@ const RegisterForm = () => {
                 ...prevData,
                 [e.target.name]: file,
             }));
-        } else {
-            console.error("No file selected");
         }
     };
 
@@ -50,6 +49,7 @@ const RegisterForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setErrors({}); // Reset errors before submission
     
         const data = new FormData();
         Object.entries(formData).forEach(([key, value]) => {
@@ -61,15 +61,22 @@ const RegisterForm = () => {
                 method: 'POST',
                 body: data,
             });
+            const responseData = await response.json();
     
             if (response.ok) {
-                alert("Student Registration Successful");
+                alert("✅ Student Registration Successful!");
             } else {
-                const errorData = await response.json();
-                console.error("Registration failed", errorData);
+                // const errorData = await response.json();
+                console.error("Registration failed", responseData);
+                alert(`❌ Registration failed: ${responseData.message || "Something went wrong!"}`);
+
+                // Set error message in state to display on UI
+                setErrors({ general: responseData.message });
             }
         } catch (error) {
             console.error("Error during registration:", error);
+            alert("❌ Something went wrong. Please try again.");
+            setErrors({ general: "Something went wrong. Please try again." });
         }
     };
     
@@ -87,6 +94,7 @@ const RegisterForm = () => {
                         <label>
                             Registration Number:
                             <input type="text" name="reg_no" value={formData.reg_no} onChange={handleChange} required />
+                            {errors.reg_no && <p className="error">{errors.reg_no}</p>}
                         </label>
                         <label>
                             Gender:
@@ -99,6 +107,7 @@ const RegisterForm = () => {
                         <label>
                             Email:
                             <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+                            {errors.email && <p className="error">{errors.email}</p>}
                         </label>
                         <label>
                             Department:
@@ -210,7 +219,8 @@ const RegisterForm = () => {
                 <div className="form-navigation">
                     {step > 1 && <button type="button" onClick={handlePrevious}>Previous</button>}
                     {step < 3 && <button type="button" onClick={handleNext}>Next</button>}
-                    {step === 3 && <button type="submit">Submit</button>}
+                    {step === 3 && <button type="submit">Register</button>}
+                    {/* {errors.general && <p className="error">{errors.general}</p>} */}
                 </div>
             </form>
         </div>

@@ -11,6 +11,7 @@ const leaveFormSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      unique: false
     },
     roomNum: {
       type: String,
@@ -37,6 +38,7 @@ const leaveFormSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      unique: false
     },
     phoneNum: {
       type: String,

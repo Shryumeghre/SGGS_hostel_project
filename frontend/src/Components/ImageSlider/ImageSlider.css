@@ -1,0 +1,17 @@
+.body{
+  color: #2899af;
+}
+
+.slider-container {
+  width: 90%;
+  margin: auto;
+  overflow: hidden;
+}
+
+.slide-image {
+  width: 100%;
+  height: 600px; /* Adjust height as needed */
+  object-fit: cover;
+  border-radius: 20px;
+  background-color: #59cee5;
+}

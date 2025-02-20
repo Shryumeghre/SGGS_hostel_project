@@ -161,7 +161,7 @@
 
 const bcrypt = require("bcryptjs");
 
-const password = "sharayu"; // The password you want to hash
+const password = "saru"; // The password you want to hash
 
 bcrypt.hash(password, 10, (err, newHash) => {
     if (err) {

@@ -8,6 +8,18 @@ const register = async (req, res) => {
     console.log("Request Body:", req.body);
     console.log("Uploaded Files:", req.files);
 
+    // Check if the email already exists
+    const existingStudent = await students_model.findOne({ email: req.body.email });
+    if (existingStudent) {
+      return res.status(400).json({ message: "Email already exists. Please use a different email." });
+    }
+
+    // Check if the registration number (reg_no) already exists
+    const existingRegNo = await students_model.findOne({ reg_no: req.body.reg_no });
+    if (existingRegNo) {
+      return res.status(400).json({ message: "Registration number already exists. Please use a different one." });
+    }
+
     // Initialize URLs
     let idCardUrl = null;
     let idProofUrl = null;
@@ -97,11 +109,6 @@ const register = async (req, res) => {
     if ((mess_fees === "Full Fees" || mess_fees === "Partially Paid") && !receiptMessUrl) {
       return res.status(400).json({ message: "Receipt for mess fees is required." });
     }
-
-    // // Encrypt password and log it (not the actual hash for security)
-    // console.log("Hashing Password...");
-    // const hashedPassword = await bcrypt.hash(password, 10);
-    // console.log("Password Hashed Successfully");
 
     // Create a new student record
     console.log("Creating New Student Record...");
