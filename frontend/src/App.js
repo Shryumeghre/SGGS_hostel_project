@@ -12,7 +12,7 @@ import FormDetail from "./Components/FormDetail/FormDetail.js";
 import StatusTracker from "./Components/StatusTracker/StatusTracker.js";  
 import LeaveForm from "./Components/LeaveForm/LeaveForm.js";
 import RejectPage from "./Components/RejectForm.js";
-// import LoginPage from "./Components/LoginPage/LoginPage.js";
+import LoginPage from "./Components/LoginPage/LoginPage.js";
 import Home from "./Components/Home/Home.js";
 // import ErrorBoundary from "./Components/ErrorBoundary.js" // Import error boundary
 import GuestRoom from "./Components/GuestRoom/GuestRoom.js";
@@ -41,7 +41,7 @@ const App = () => {
           <Route path="/LeaveApplicationPage" element={<LeaveApplicationPage />} />
           <Route path="/register" element={<RegisterForm />} />
           <Route path="/status-track/:formId" element={<StatusTracker />} />  
-          {/* <Route path="/login" element={<LoginPage/>} /> */}
+          <Route path="/login" element={<LoginPage/>} />
           <Route path="/leaveForm" element={<LeaveForm/>} />
           <Route path="reject/:formId" element={<RejectPage/>}/>
           <Route path="/leave" element={<LeaveForm />} />

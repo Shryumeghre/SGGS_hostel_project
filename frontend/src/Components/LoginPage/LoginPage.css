@@ -3,17 +3,17 @@
     padding: 0;
     font-family: Arial, sans-serif;
     background-color: #eaf4f4;
-    display: flex; /* This is causing the issue */
+    display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
   }
    */
-  .login-container {
-    display: flex; /* Keep this only inside the login container */
+   .login-container {
+    display: flex;
     justify-content: center;
     align-items: center;
-    min-height: 100vh; /* Keep login page centered */
+    height: 100%;
   }
   
   .login-card {
@@ -36,8 +36,20 @@
     margin-bottom: 10px;
   }
   
+  .login-header p {
+    font-size: 14px;
+    margin: 0;
+  }
+  
   .login-form {
     padding: 30px;
+  }
+  
+  .login-form h2 {
+    text-align: center;
+    color: #033c3f;
+    font-size: 20px;
+    margin-bottom: 20px;
   }
   
   .form-group {
@@ -56,6 +68,29 @@
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    font-size: 14px;
+  }
+  
+  .password-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .forgot-password {
+    font-size: 12px;
+    color: #006d77;
+    text-decoration: none;
+  }
+  
+  .forgot-password:hover {
+    text-decoration: underline;
+  }
+  
+  .remember-me {
+    display: flex;
+    align-items: center;
+    gap: 5px;
   }
   
   .login-button {
@@ -67,6 +102,7 @@
     border-radius: 5px;
     font-size: 16px;
     cursor: pointer;
+    transition: background 0.3s;
   }
   
   .login-button:hover {
@@ -76,6 +112,7 @@
   .signup-link {
     text-align: center;
     margin-top: 20px;
+    font-size: 14px;
   }
   
   .signup-link a {
