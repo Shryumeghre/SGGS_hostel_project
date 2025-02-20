@@ -1,7 +1,9 @@
 /* Container styling */
 body{
     margin:0;
-    background: linear-gradient(135deg, #e6faff, #d9f5ff);
+    background: #fbf8cc;
+    
+    /* linear-gradient(135deg, #e6faff, #d9f5ff); */
     
 }
 .signup-container {

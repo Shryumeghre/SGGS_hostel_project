@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.14.0",
+    "@emotion/styled": "^11.14.0",
+    "@mui/material": "^6.4.5",
     "bcrypt": "^5.1.1",
     "cloudinary": "^2.5.1",
     "cra-template": "1.2.0",
@@ -17,6 +20,7 @@
     "react-slick": "^0.30.3",
     "react-slideshow-image": "^4.3.2",
     "slick-carousel": "^1.8.1",
+    "socket.io-client": "^4.8.1",
     "web-vitals": "^4.2.4"
   },
   "scripts": {

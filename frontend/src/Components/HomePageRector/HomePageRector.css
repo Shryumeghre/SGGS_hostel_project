@@ -1,0 +1,291 @@
+/* Global Styles */
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #fbf8cc;
+  color: #333;
+  font-size: 16px;
+  line-height: 1.6;
+}
+
+/* Header Section */
+.header {
+  background-color: #11d3d3;
+  color: white;
+  padding: 20px;
+  text-align: center;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.college-logo {
+  width: 100%;
+  height: auto;
+  max-width: 280px;
+}
+
+/* Navigation Styles */
+.nav {
+  margin: 15px auto;
+  background-color: #16aac4;
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 12px;
+  border-radius: 30px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  padding: 8px 18px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.nav-link:hover {
+  background-color: #005fa3;
+  transform: translateY(-2px);
+}
+
+/* Main Content Container */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 20px auto;
+}
+
+/* Section Styles */
+.section {
+  background-color: #ffffff;
+  margin: 25px 0;
+  padding: 25px;
+  border-radius: 12px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.section-title {
+  font-size: 1.5rem;
+  margin-bottom: 15px;
+  color: #007acc;
+  font-weight: bold;
+}
+
+/* Button Styles */
+.primary-button {
+  background-color: #007acc;
+  color: white;
+  padding: 12px 22px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.primary-button:hover {
+  background-color: #005fa3;
+  transform: scale(1.05);
+}
+
+/* Facilities Grid */
+.facilities-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 20px;
+  text-align: center;
+}
+
+.facility-image {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 4px solid #007acc;
+  transition: transform 0.3s ease;
+}
+
+.facility-image:hover {
+  transform: scale(1.1);
+}
+
+.facility-text {
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+/* Footer Styles */
+.footer {
+  text-align: center;
+  padding: 15px 0;
+  background-color: #007acc;
+  color: white;
+  font-size: 14px;
+}
+
+/* Notice Board Styling */
+.notice-board {
+  max-width: 700px;
+  margin: 50px auto;
+  padding: 25px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* Notice Form */
+.notice-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.notice-input {
+  width:95%;
+  padding: 14px;
+  border: 2px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+  transition: border-color 0.3s ease;
+}
+
+.notice-input:focus {
+  border-color: #007acc;
+  outline: none;
+}
+
+/* Post Button */
+.post-button {
+  background-color: #007bff;
+  color: white;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.post-button:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+/* Notice List */
+.notice-list {
+  margin-top: 25px;
+}
+
+.no-notices {
+  color: #777;
+  font-size: 14px;
+}
+
+/* Notice Item */
+.notice-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: white;
+  padding: 12px;
+  margin: 8px 0;
+  border-radius: 8px;
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Delete Button */
+.delete-button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.delete-button:hover {
+  background-color: #a71d2a;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+  .nav {
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      padding: 15px;
+  }
+
+  .college-logo {
+      width: 75%;
+      max-width: 240px;
+  }
+
+  .container {
+      width: 95%;
+  }
+
+  .section-title {
+      font-size: 1.3rem;
+  }
+
+  .primary-button {
+      font-size: 1rem;
+      padding: 12px 25px;
+  }
+
+  .facilities-grid {
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  }
+
+  .facility-image {
+      width: 90px;
+      height: 90px;
+  }
+
+  .footer {
+      padding: 15px 0;
+  }
+}
+
+/* Mobile Styles */
+@media (max-width: 480px) {
+  .college-logo {
+      width: 70%;
+      max-width: 200px;
+  }
+
+  .section-title {
+      font-size: 1.2rem;
+  }
+
+  .primary-button {
+      font-size: 0.9rem;
+      padding: 10px 20px;
+  }
+
+  .facilities-grid {
+      grid-template-columns: repeat(auto-fit, minmax(90px, 1fr));
+  }
+
+  .facility-image {
+      width: 70px;
+      height: 70px;
+  }
+
+  .notice-board {
+      max-width: 90%;
+  }
+
+  .footer {
+      font-size: 13px;
+  }
+}

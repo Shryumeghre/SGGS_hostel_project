@@ -2,6 +2,11 @@ const mongoose = require("mongoose");
 
 const leaveFormSchema = new mongoose.Schema(
   {
+    student: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "StudentUser", 
+      required: true,
+    },
     name: {
       type: String,
       required: true,
@@ -36,7 +41,6 @@ const leaveFormSchema = new mongoose.Schema(
     },
     regNo: {
       type: String,
-      required: true,
       trim: true,
       unique: false
     },
@@ -93,7 +97,6 @@ const leaveFormSchema = new mongoose.Schema(
       default: "pending",
     },
   },
-  { timestamps: true } // Add createdAt and updatedAt timestamps
 );
 
 const LeaveForm = mongoose.model("LeaveForm", leaveFormSchema);

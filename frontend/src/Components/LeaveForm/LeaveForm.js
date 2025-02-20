@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./LeaveForm.css";
 
 const LeaveForm = () => {
+    const token=localStorage.getItem('token');
     const [formData, setFormData] = useState({
         name: "",
         email: "",
@@ -54,10 +55,13 @@ const LeaveForm = () => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (token) {
         try {
             const response = await fetch("http://localhost:5001/api/submit", {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: { 
+                    'Authorization': `Bearer ${token}`,
+                    "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
             });
             if (response.ok) {
@@ -84,6 +88,9 @@ const LeaveForm = () => {
         } catch (error) {
             console.error("Error submitting form:", error);
         }
+    } else {
+        console.log('No token found in localStorage');
+      }
     };
 
     return (
@@ -145,7 +152,7 @@ const LeaveForm = () => {
                     <select name="recipient" value={formData.recipient} onChange={handleChange} required>
                         <option value="">Select</option>
                         <option value="HOD">HOD</option>
-                        <option value="Rector-Warden">Rector/Warden</option>
+                        <option value="Rector-Warden">Rector-Warden</option>
                     </select>
                 </label>
                 <button type="submit">Submit</button>

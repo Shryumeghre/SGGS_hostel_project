@@ -1,11 +1,13 @@
 require('dotenv').config();
 const express = require("express");
 const nodemailer = require("nodemailer");
+const authMiddleware = require("../middlewares/authMiddleware")
 const LeaveForm = require("../models/leaveForm_model");
 const hodEmails = require("../hodEmails");
 const RectorModel = require("../models/Rector");
-const axios = require("axios");
+const StudentUser = require("../models/students_model");
 
+const axios = require("axios");
 const transporter = nodemailer.createTransport({
   service: 'Gmail',
   auth: {
@@ -16,10 +18,19 @@ const transporter = nodemailer.createTransport({
 
 const leaveForm = async (req, res) => {
   try {
+    const token = req.headers.authorization?.split(" ")[1]; // Get token from request headers
+    if (!token) return res.status(401).json({ message: "Unauthorized" });
+
+    const studentId = req.user.userId;
+    const student = await StudentUser.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: "Student not found" });
+    }
     const { recipient, branch, ...leaveFormData } = req.body;
 
     // Save leave form to the database
-    const leaveForm = new LeaveForm({ ...leaveFormData, recipient, branch });
+  
+    const leaveForm = new LeaveForm({ ...leaveFormData, recipient, branch ,student: student._id });
     await leaveForm.save();
 
     let recipientEmails = [];
@@ -32,12 +43,12 @@ const leaveForm = async (req, res) => {
         return res.status(400).json({ message: "HOD email not found for branch" });
       }
       recipientEmails.push(hodEmail);
-      approveApiUrl = `http://localhost:5001/api/approveByHOD/${leaveForm._id}`;
+      approveApiUrl = `http://localhost:5001/api/approveByHOD/${leaveForm._id}?token=${token}`;
     } else if (recipient === "Rector-Warden") {
       const users = await RectorModel.find({ role: { $in: ["rector", "warden"] } });
       const emails = users.map((user) => user.email);
       recipientEmails = recipientEmails.concat(emails);
-      approveApiUrl = `http://localhost:5001/api/approveByRector/${leaveForm._id}`;
+      approveApiUrl = `http://localhost:5001/api/approveByRector/${leaveForm._id}?token=${token}`;
     } else {
       return res.status(400).json({ message: "Invalid recipient" });
     }
@@ -59,7 +70,7 @@ const leaveForm = async (req, res) => {
       <br />
       <p>Please review the request and take an action:</p>
       <a href="${approveApiUrl}">Accept</a> |
-      <a href="http://localhost:3000/reject/${leaveForm._id}?role=${recipient}">Reject as ${recipient}</a>
+      <a href="http://localhost:3000/reject/${leaveForm._id}?role=${recipient}?token=${token}">Reject as ${recipient}</a>
 
     `;
 
@@ -80,6 +91,7 @@ const leaveForm = async (req, res) => {
 
 const approveByHOD = async (req, res) => {
   try {
+     const token = req.headers.authorization?.split(" ")[1]; 
     const { formId } = req.params; // Form ID from URL
     const leaveForm = await LeaveForm.findById(formId);
 
@@ -127,11 +139,11 @@ const approveByHOD = async (req, res) => {
       <p><strong>Status:</strong> ${leaveForm.status}</p>
       <br />
       <p>Please take an action:</p>
-      <a href="http://localhost:5001/api/approveByRector/${leaveForm._id}">Accept</a> |
-      <a href="http://localhost:3000/reject/${leaveForm._id}?role=Rector-Warden">Reject</a>
+      <a href="http://localhost:5001/api/approveByRector/${leaveForm._id}?token=${token}">Accept</a> |
+      <a href="http://localhost:3000/reject/${leaveForm._id}?role=Rector-Warden&token=${token}">Reject</a>
     `;
     await transporter.sendMail({
-      from: process.env.EMAIL, // Ensure you have Email set in your environment variables
+      from: process.env.EMAIL, // Ensure you have EMAIL set in your environment variables
       to: rectorEmails,
       subject: emailSubject,
       html: emailBody,
@@ -146,6 +158,7 @@ const approveByHOD = async (req, res) => {
 
 const approveByRector = async (req, res) => {
   try {
+  
     const { formId } = req.params; // Form ID from URL
     const leaveForm = await LeaveForm.findById(formId);
 
@@ -198,6 +211,7 @@ const approveByRector = async (req, res) => {
 
 const rejectForm = async (req, res) => {
   try {
+
     const { formId } = req.params;
     const { role } = req.body; // Get role from request body
 
@@ -252,8 +266,61 @@ const rejectForm = async (req, res) => {
 };
 
 
+const getAllLeaveForms = async (req, res) => {
+  try {
+    const leaveForms = await LeaveForm.find();
+    res.status(200).json(leaveForms); 
+  } catch (error) {
+    console.error('Error fetching leave forms:', error);
+    res.status(500).json({ error: 'Failed to fetch leave forms' });
+  }
+};
+
+const getLeaveForm = async (req, res) => {
+  try {
+    const { formId } = req.params;
+    const leaveForm = await LeaveForm.findById(formId);
+    if (!leaveForm) {
+      return res.status(404).json({ message: 'Leave form not found.' });
+  }
+    res.status(200).json(leaveForm); 
+  } catch (error) {
+    console.error('Error fetching leave form:', error);
+    res.status(500).json({ error: 'Failed to fetch leave form' });
+  }
+};
 
 
-module.exports = { leaveForm, approveByHOD, approveByRector, rejectForm };
+const getAllFormsOfUser= async(req,res)=>{
+  try {
+    const studentId = req.user.userId;
+    const forms = await LeaveForm.find({student: studentId});
+    if (forms.length === 0) {
+      return res.status(404).json({ message: 'No leave forms found for this student.' });
+    }
+    return res.status(200).json(forms);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'An error occurred while retrieving leave forms.' });
+  }
+}
 
 
+const getLeaveStatus = async (req, res) => {
+  console.log('Request received:', req);
+  const { formId } = req.params;
+  console.log('Received formId:', formId);
+
+  try {
+    const leaveForm = await LeaveForm.findById(formId);
+    if (!leaveForm) {
+      return res.status(404).json({ message: 'Form not found' });
+    }
+    res.status(200).json({ status: leaveForm.status });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Error retrieving form status' });
+  }
+};
+
+module.exports = { leaveForm, approveByHOD, approveByRector, rejectForm ,getAllLeaveForms, getLeaveStatus,getAllFormsOfUser, getLeaveForm };
