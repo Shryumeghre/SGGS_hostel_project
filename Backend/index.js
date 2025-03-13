@@ -13,6 +13,7 @@ const student_router = require("./routes/students_router");
 const login_router = require("./routes/login_router");
 const rectorRoutes = require("./routes/rectorRoutes");
 const noticeRoutes = require("./routes/notice_router");
+const attendanceRouter = require("./routes/attendence_router");
 const io = socketIo(server); 
 
 const leaveForm = require("./routes/leaveForm_router");
@@ -38,6 +39,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 app.use("/auth", rectorRoutes);
 app.use("/auth", profileRouter);
 app.use("/api/notices", noticeRoutes);
+app.use("/api/attendance", attendanceRouter);
 
 io.on('connection', (socket) => {
     console.log('a user connected');

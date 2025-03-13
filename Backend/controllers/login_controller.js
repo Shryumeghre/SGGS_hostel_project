@@ -26,13 +26,6 @@ const login = async (req, res) => {
         if (!user) {
             return res.status(404).json({ message: "User not found." });
         }
-
-        // Compare passwords
-        // const isPasswordValid = await bcrypt.compare(password, user.password);
-        // console.log(password);
-        // console.log(user.password);
-        // console.log(isPasswordValid);
-
         console.log("Entered Password:", password);
 console.log("Stored Hashed Password:", user.password);
 const isPasswordValid = await bcrypt.compare(password, user.password);

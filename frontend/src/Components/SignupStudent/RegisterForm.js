@@ -96,14 +96,40 @@ const RegisterForm = () => {
                             <input type="text" name="reg_no" value={formData.reg_no} onChange={handleChange} required />
                             {errors.reg_no && <p className="error">{errors.reg_no}</p>}
                         </label>
-                        <label>
-                            Gender:
-                            <select name="gender" value={formData.gender} onChange={handleChange} required>
-                                <option value="">Select</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
-                        </label>
+                        <label>Gender:</label>
+                        <div className="gender-options">
+                            <input
+                                type="radio"
+                                id="male"
+                                name="gender"
+                                value="Male"
+                                checked={formData.gender === "Male"}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="male" className="gender-btn">Male</label>
+
+                            <input
+                                type="radio"
+                                id="female"
+                                name="gender"
+                                value="Female"
+                                checked={formData.gender === "Female"}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="female" className="gender-btn">Female</label>
+
+                            <input
+                                type="radio"
+                                id="other"
+                                name="gender"
+                                value="Other"
+                                checked={formData.gender === "Other"}
+                                onChange={handleChange}
+                            />
+                            <label htmlFor="other" className="gender-btn">Other</label>
+                        </div>
+                        {errors.gender && <p className="error">{errors.gender}</p>}
+
                         <label>
                             Email:
                             <input type="email" name="email" value={formData.email} onChange={handleChange} required />
@@ -119,19 +145,22 @@ const RegisterForm = () => {
                         </label>
                     </div>
                 )}
-                {step === 2 && (
+                {step === 2 && ( 
                     <div className="form-step">
                         <h2>Step 2: Hostel Information</h2>
-                        <label>
-                            Date of Birth:
+
+                        <div className="form-group">
+                            <label>Date of Birth:</label>
                             <input type="date" name="dob" value={formData.dob} onChange={handleChange} required />
-                        </label>
-                        <label>
-                            Phone:
+                        </div>
+
+                        <div className="form-group">
+                            <label>Phone:</label>
                             <input type="text" name="phone" value={formData.phone} onChange={handleChange} required />
-                        </label>
-                        <label>
-                            Hostel:
+                        </div>
+
+                        <div className="form-group">
+                            <label>Hostel:</label>
                             <select name="hostel" value={formData.hostel} onChange={handleChange} required>
                                 <option value="">Select</option>
                                 <option value="Krishna">Krishna</option>
@@ -140,49 +169,54 @@ const RegisterForm = () => {
                                 <option value="Nandgiri">Nandgiri</option>
                                 <option value="Sahayadri">Sahayadri</option>
                             </select>
-                        </label>
-                        <label>
-                            Hostel Fees Paid:
+                        </div>
+
+                        <div className="form-group">
+                            <label>Hostel Fees Paid:</label>
                             <select name="hostel_fees" value={formData.hostel_fees} onChange={handleChange} required>
                                 <option value="">Select</option>
                                 <option value="Full Fees">Full Fees</option>
                                 <option value="Partially Paid">Partially Paid</option>
                                 <option value="Not Paid">Not Paid</option>
                             </select>
-                        </label>
+                        </div>
+
                         {formData.hostel_fees !== "Not Paid" && (
-                            <label>
-                                Upload Hostel Fee Receipt:
+                            <div className="form-group">
+                                <label>Upload Hostel Fee Receipt:</label>
                                 <input type="file" name="receipt_hostel" accept=".jpg,.png,.pdf" onChange={handleFileChange} required />
-                            </label>
+                            </div>
                         )}
-                        <label>
-                            Mess Fees Paid:
+
+                        <div className="form-group">
+                            <label>Mess Fees Paid:</label>
                             <select name="mess_fees" value={formData.mess_fees} onChange={handleChange} required>
                                 <option value="">Select</option>
                                 <option value="Full Fees">Full Fees</option>
                                 <option value="Partially Paid">Partially Paid</option>
                                 <option value="Not Paid">Not Paid</option>
                             </select>
-                        </label>
+                        </div>
+
                         {formData.mess_fees !== "Not Paid" && (
-                            <label>
-                                Upload Mess Fee Receipt:
+                            <div className="form-group">
+                                <label>Upload Mess Fee Receipt:</label>
                                 <input type="file" name="receipt_mess" accept=".jpg,.png,.pdf" onChange={handleFileChange} required />
-                            </label>
+                            </div>
                         )}
-                        <label>
-                            Room Allotted:
-                            <input
-                                type="text"
-                                name="room_alloted"
-                                value={formData.room_alloted}
-                                onChange={handleChange}
-                                required
-                            />
-                        </label>
+
+                        <div className="form-group">
+                            <label>Room Allotted:</label>
+                            <input type="text" name="room_alloted" value={formData.room_alloted} onChange={handleChange} required />
+                        </div>
+
+                        {/* <div className="button-group">
+                            <button type="button" onClick={handlePrevious}>Previous</button>
+                            <button type="submit">Next</button>
+                        </div> */}
                     </div>
                 )}
+
                 {step === 3 && (
                     <div className="form-step">
                         <h2>Step 3: Additional Information</h2>

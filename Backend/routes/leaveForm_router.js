@@ -1,5 +1,5 @@
 const express = require("express");
-const authMiddleware = require("../middlewares/authMiddleware");
+const { authMiddleware } = require("../middlewares/authMiddleware");
 const leaveForm_controller = require("../controllers/leaveForm_controller");
 const leaveForm_router = express.Router();
 

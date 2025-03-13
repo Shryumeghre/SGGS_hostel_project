@@ -1,5 +1,6 @@
 const Rector = require("../models/Rector");
 // const bcrypt = require("bcrypt");
+const macaddress = require("macaddress");
 
 const signupRector = async (req, res) => {
   const { name, email, mobile, address, password, confirmPassword, role } = req.body;
@@ -33,4 +34,39 @@ const signupRector = async (req, res) => {
   }
 };
 
-module.exports = { signupRector };
+const StudentUser = require("../models/students_model");
+
+const updateMAC = async (req, res) => {
+    try {
+        const { studentId } = req.params;
+        const { macAddresses } = req.body;
+
+        // Ensure maximum 2 MAC addresses
+        if (!Array.isArray(macAddresses) || macAddresses.length > 2) {
+            return res.status(400).json({ message: "Provide up to 2 MAC addresses." });
+        }
+
+        // Update MAC addresses
+        const updatedStudent = await StudentUser.findByIdAndUpdate(
+            studentId,
+            { macAddresses },
+            { new: true }
+        );
+
+        if (!updatedStudent) {
+            return res.status(404).json({ message: "Student not found." });
+        }
+
+        res.status(200).json({
+            message: "MAC addresses updated successfully.",
+            student: updatedStudent,
+        });
+    } catch (error) {
+        console.error("Error updating MAC addresses:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+};
+
+module.exports = { updateMAC };
+
+module.exports = { signupRector, updateMAC };

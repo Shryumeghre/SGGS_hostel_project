@@ -2,151 +2,122 @@ const students_model = require("../models/students_model.js");
 const bcrypt = require("bcryptjs");
 const { uploadOnCloudinary } = require("../utils/cloudinary.js");
 
+// Helper function to get client IP
+const getClientIP = (req) => req.headers["x-forwarded-for"] || req.socket.remoteAddress;
+
 const register = async (req, res) => {
   try {
-    // Log request body and uploaded files
-    console.log("Request Body:", req.body);
-    console.log("Uploaded Files:", req.files);
-
-    // Check if the email already exists
-    const existingStudent = await students_model.findOne({ email: req.body.email });
-    if (existingStudent) {
-      return res.status(400).json({ message: "Email already exists. Please use a different email." });
-    }
-
-    // Check if the registration number (reg_no) already exists
-    const existingRegNo = await students_model.findOne({ reg_no: req.body.reg_no });
-    if (existingRegNo) {
-      return res.status(400).json({ message: "Registration number already exists. Please use a different one." });
-    }
-
-    // Initialize URLs
-    let idCardUrl = null;
-    let idProofUrl = null;
-    let receiptHostelUrl = null;
-    let receiptMessUrl = null;
-
-    // Upload files to Cloudinary and log responses
-    if (req.files && req.files["id_card"]) {
-      const idCardFilePath = req.files["id_card"][0].path;
-      console.log("Uploading ID Card File Path:", idCardFilePath);
-
-      const idCardUpload = await uploadOnCloudinary(idCardFilePath);
-      console.log("Cloudinary Response for ID Card:", idCardUpload);
-
-      idCardUrl = idCardUpload?.url;
-    }
-
-    if (req.files && req.files["id_proof"]) {
-      const idProofFilePath = req.files["id_proof"][0].path;
-      console.log("Uploading ID Proof File Path:", idProofFilePath);
-
-      const idProofUpload = await uploadOnCloudinary(idProofFilePath);
-      console.log("Cloudinary Response for ID Proof:", idProofUpload);
-
-      idProofUrl = idProofUpload?.url;
-    }
-
-    if (req.files && req.files["receipt_hostel"]) {
-      const receiptHostelFilePath = req.files["receipt_hostel"][0].path;
-      console.log("Uploading Hostel Receipt File Path:", receiptHostelFilePath);
-
-      const receiptHostelUpload = await uploadOnCloudinary(receiptHostelFilePath);
-      console.log("Cloudinary Response for Hostel Receipt:", receiptHostelUpload);
-
-      receiptHostelUrl = receiptHostelUpload?.url;
-    }
-
-    if (req.files && req.files["receipt_mess"]) {
-      const receiptMessFilePath = req.files["receipt_mess"][0].path;
-      console.log("Uploading Mess Receipt File Path:", receiptMessFilePath);
-
-      const receiptMessUpload = await uploadOnCloudinary(receiptMessFilePath);
-      console.log("Cloudinary Response for Mess Receipt:", receiptMessUpload);
-
-      receiptMessUrl = receiptMessUpload?.url;
-    }
-
-    // Extract other form fields
-    const {
-      username,
-      reg_no,
-      gender,
-      email,
-      dept,
-      year_of_study,
-      dob,
-      phone,
-      hostel,
-      hostel_fees,
-      mess_fees,
-      room_alloted,
-      permanent_addr,
-      father_name,
-      parents_num,
-      localgardian_num,
-      password,
-    } = req.body;
-
-    console.log("Extracted Fields:", {
-      username,
-      reg_no,
-      email,
-      hostel_fees,
-      mess_fees,
+    // Check if the email or registration number already exists in a single query
+    const existingStudent = await students_model.findOne({
+      $or: [{ email: req.body.email }, { reg_no: req.body.reg_no }],
     });
 
-    // Validate required fields
+    if (existingStudent) {
+      return res.status(400).json({
+        message: existingStudent.email === req.body.email
+          ? "Email already exists. Please use a different email."
+          : "Registration number already exists. Please use a different one."
+      });
+    }
+
+     // Capture user's IP address
+     const ipAddress = getClientIP(req);
+
+     // Capture user's MAC address (first device during registration)
+     const macAddress = await macaddress.one();
+
+    // Initialize file upload promises
+    const fileUploadPromises = [];
+    const fileUrls = {};
+
+    const fileFields = ["id_card", "id_proof", "receipt_hostel", "receipt_mess"];
+    
+    fileFields.forEach(field => {
+      if (req.files && req.files[field]) {
+        const filePath = req.files[field][0].path;
+        fileUploadPromises.push(
+          uploadOnCloudinary(filePath).then(uploaded => {
+            fileUrls[field] = uploaded?.url;
+          })
+        );
+      }
+    });
+
+    // Wait for all files to upload simultaneously
+    await Promise.all(fileUploadPromises);
+
+    // Extract form fields
+    const {
+      username, reg_no, gender, email, dept, year_of_study, dob, phone, hostel,
+      hostel_fees, mess_fees, room_alloted, permanent_addr, father_name,
+      parents_num, localgardian_num, password
+    } = req.body;
+
     if (!username || !email || !password) {
       return res.status(400).json({ message: "Required fields are missing." });
     }
 
-    // Validate receipt conditions
-    if ((hostel_fees === "Full Fees" || hostel_fees === "Partially Paid") && !receiptHostelUrl) {
+    // Validate receipt conditions before saving to DB
+    if ((hostel_fees === "Full Fees" || hostel_fees === "Partially Paid") && !fileUrls["receipt_hostel"]) {
       return res.status(400).json({ message: "Receipt for hostel fees is required." });
     }
 
-    if ((mess_fees === "Full Fees" || mess_fees === "Partially Paid") && !receiptMessUrl) {
+    if ((mess_fees === "Full Fees" || mess_fees === "Partially Paid") && !fileUrls["receipt_mess"]) {
       return res.status(400).json({ message: "Receipt for mess fees is required." });
     }
 
-    // Create a new student record
-    console.log("Creating New Student Record...");
+    // Create new student record
     const studentCreated = await students_model.create({
-      username,
-      reg_no,
-      gender,
-      email,
-      dept,
-      year_of_study,
-      dob,
-      phone,
-      hostel,
-      hostel_fees,
-      mess_fees,
-      room_alloted,
-      id_card: idCardUrl,
-      id_proof: idProofUrl,
-      receipt_hostel: receiptHostelUrl,
-      receipt_mess: receiptMessUrl,
-      permanent_addr,
-      father_name,
-      parents_num,
-      localgardian_num,
-      password,
+      username, reg_no, gender, email, dept, year_of_study, dob, phone, hostel,
+      hostel_fees, mess_fees, room_alloted, permanent_addr, father_name,
+      parents_num, localgardian_num, password,
+      id_card: fileUrls["id_card"],
+      id_proof: fileUrls["id_proof"],
+      receipt_hostel: fileUrls["receipt_hostel"],
+      receipt_mess: fileUrls["receipt_mess"],
+      ipAddress, // Store the captured IP address
+      macAddresses: [macAddress] // Store the first MAC address in an array
     });
-    console.log("Student Record Created Successfully:", studentCreated);
 
-    // Respond with success
+    // Send response without unnecessary logs
     res.status(201).json({
       msg: "Registration Successful",
       token: await studentCreated.generateToken(),
       userid: studentCreated._id.toString(),
     });
+
   } catch (error) {
     console.error("Error in Registration:", error);
     res.status(500).json({ error: "Internal Server Error", details: error.message });
   }
 };
 
-module.exports = { register };
+// ✅ Get Student Profile with Access Control
+const getStudentById = async (req, res) => {
+  try {
+      const { studentId } = req.params;
+      const student = await students_model.findById(studentId);
+
+      if (!student) {
+          return res.status(404).json({ message: "Student not found" });
+      }
+
+      // Allow rector/warden to view all details
+      if (req.user.role === "rector" || req.user.role === "warden") {
+          return res.status(200).json(student);
+      }
+
+      // Allow student to view only their own profile (hide IP, MAC, password)
+      if (req.user.userId === studentId) {
+          const { password, ipAddress, macAddresses, ...safeData } = student.toObject();
+          return res.status(200).json(safeData);
+      }
+
+      return res.status(403).json({ message: "Access denied." });
+  } catch (error) {
+      console.error("Error fetching student profile:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+  }
+};
+
+module.exports = { register, getStudentById };

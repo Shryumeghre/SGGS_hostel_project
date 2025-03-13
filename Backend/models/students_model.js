@@ -13,7 +13,7 @@ const studentsSchema = new mongoose.Schema({
     },
     gender: {
         type: String,
-        enum: ["Male", "Female"],
+        enum: ["Male", "Female", "Other"],
         required: true,
     },
     email: {
@@ -41,6 +41,7 @@ const studentsSchema = new mongoose.Schema({
     phone: {
         type: String,
         required: true,
+        // match: /^[0-9]{10}$/
     },
     hostel: {
         type: String,
@@ -90,6 +91,7 @@ const studentsSchema = new mongoose.Schema({
     parents_num: {
         type: String,
         required: true,
+        // match: /^[0-9]{10}$/
     },
     localgardian_num: {
         type: String,
@@ -98,6 +100,15 @@ const studentsSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    ipAddress: { 
+        type: String, 
+        required: true 
+    },
+    macAddresses: { 
+        type: [String], 
+        required: true, 
+        maxlength: 2 
+    }, // Max 2 MACs
 });
 
 
@@ -126,6 +137,7 @@ studentsSchema.methods.generateToken = async function () {
                 userId: this._id.toString(),
                 email: this.email,
                 reg_no: this.reg_no,
+                role: "student",
             },
             process.env.JWT_SECRET_KEY,
             {

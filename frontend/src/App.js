@@ -33,7 +33,7 @@ const App = () => {
           <Route path="/SignupOptions" element={<SignupOptions />} />
           <Route path="/SignupRector" element={<SignupRector />} />
           <Route path="/RegisterForm" element={<RegisterForm />} />
-          <Route path="/SignupRector" element={<SignupRector />} />
+          {/* <Route path="/SignupRector" element={<SignupRector />} /> */}
           {/* <Route path="/login" element={<ErrorBoundary><LoginPage /></ErrorBoundary>} /> */}
           <Route path="/HomePageRector" element={<HomePageRector />} />
           <Route path="/HomePageGuard" element={<HomePageGuard />} />

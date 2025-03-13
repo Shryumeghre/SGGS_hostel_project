@@ -108,3 +108,23 @@ https://coolors.co/palettes/popular/gradient
 For login as a student: 
 email: purumeghare09@gmail.com
 password: saru
+
+{
+    "email": "anuja@gmail.com",
+    "password": "Anuja@123"
+}
+
+POST---> http://localhost:5001/api/attendance/mark
+{
+  "Authorization": "Bearer YOUR_JWT_TOKEN",
+  "Content-Type": "application/json"
+}
+
+
+http://localhost:5001/api/attendance/student/67c5f2955b517837a4e00a2f
+{
+  "Authorization": "Bearer YOUR_JWT_TOKEN",
+  "Content-Type": "application/json"
+}
+
+http://localhost:5001/api/attendance/mark-absent
