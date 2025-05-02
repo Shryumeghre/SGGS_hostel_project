@@ -6,24 +6,25 @@ const LeaveApplicationPage = () => {
   const [applications, setApplications] = useState([]);
   const [error, setError] = useState(null);
   const [selectedApplication, setSelectedApplication] = useState(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const socket = io('http://localhost:5001');
 
     const fetchApplications = async () => {
-        try {
-          const response = await fetch('http://localhost:5001/api'); // Replace with your actual endpoint
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const data = await response.json();
-          console.log('Fetched applications:', data); // Debug log
-          setApplications(data);
-        } catch (error) {
-          console.error('Error fetching applications:', error);
-          setError('Failed to fetch applications. Please try again later.');
+      try {
+        const response = await fetch('http://localhost:5001/api'); // Replace with your actual endpoint
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
         }
-      };
+        const data = await response.json();
+        console.log('Fetched applications:', data); // Debug log
+        setApplications(data);
+      } catch (error) {
+        console.error('Error fetching applications:', error);
+        setError('Failed to fetch applications. Please try again later.');
+      }
+    };
 
     fetchApplications();
 
@@ -42,10 +43,24 @@ const LeaveApplicationPage = () => {
     return () => socket.close();
   }, []);
 
+  // Filter applications based on search term
+  const filteredApplications = applications.filter((app) =>
+    app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    app.regNo.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const groupedApplications = {
-    Accepted: applications.filter((app) => app.status === 'leave granted'),
-    Rejected: applications.filter((app) => app.status === 'Rejected'),
-    Pending: applications.filter((app) => app.status !== 'leave granted' && app.status !== 'Rejected'),
+    Accepted: filteredApplications.filter((app) => app.status === 'leave granted'),
+    Rejected: filteredApplications.filter(
+      (app) =>
+        app.status === 'Rejected by HOD' ||
+        app.status === 'Rejected by Rector-Warden'
+    ),
+    Pending: filteredApplications.filter(
+      (app) =>
+        app.status === 'pending' ||
+        app.status === 'accepted by HOD'
+    ),
   };
 
   const handleViewDetails = (application) => {
@@ -58,70 +73,77 @@ const LeaveApplicationPage = () => {
 
   return (
     <div>
-    <h1 className="headline">Leave Form Applications</h1>
-    <br></br>
-    <div className="leave-applications-container">
+      <h1 className="headline">Leave Form Applications</h1>
+      <div className="search-container">
+  <input
+    type="text"
+    placeholder="Search by student name..."
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    className="search-input"
+  />
+</div>
+      <br />
+      <div className="leave-applications-container">
+        {error && <p className="error-message">{error}</p>}
 
-      {error && <p className="error-message">{error}</p>}
-
-      {['Accepted', 'Rejected', 'Pending'].map((status) => (
-        <div className="status-section" key={status}>
-          <h3 className={`status-title ${status.toLowerCase()}`}>{status} Applications</h3>
-          {groupedApplications[status].length > 0 ? (
-            <table className="applications-table">
-              <thead>
-                <tr>
-                  <th>Student Name</th>
-                  <th>Registration Number</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                {groupedApplications[status].map((application) => (
-                  <tr key={application._id}>
-                    <td>{application.name}</td>
-                    <td>{application.regNo}</td>
-                    <td>
-                      <button
-                        className="view-button"
-                        onClick={() => handleViewDetails(application)}
-                      >
-                        View
-                      </button>
-                    </td>
+        {['Accepted', 'Rejected', 'Pending'].map((status) => (
+          <div className="status-section" key={status}>
+            <h3 className={`status-title ${status.toLowerCase()}`}>{status} Applications</h3>
+            {groupedApplications[status].length > 0 ? (
+              <table className="applications-table">
+                <thead>
+                  <tr>
+                    <th>Student Name</th>
+                    <th>Registration Number</th>
+                    <th>Action</th>
                   </tr>
-                ))}
-              </tbody>
-            </table>
-          ) : (
-            <p className="no-applications">No {status.toLowerCase()} applications.</p>
-          )}
-        </div>
-      ))}
-
-      {/* Details Modal */}
-      {selectedApplication && (
-        <div className="details-modal">
-          <div className="modal-content">
-            <h2>Leave Application Details</h2>
-            <p><strong>Name:</strong> {selectedApplication.name}</p>
-            <p><strong>Registration Number:</strong> {selectedApplication.regNo}</p>
-            <p><strong>Branch:</strong> {selectedApplication.branch}</p>
-            <p><strong>Contact Number:</strong> {selectedApplication.phoneNum}</p>
-            <p><strong>Room Number:</strong> {selectedApplication.roomNum}</p>
-            <p><strong>Status:</strong> {selectedApplication.status}</p>
-            <p><strong>Reason:</strong> {selectedApplication.reasonOfLeave}</p>
-            <p><strong>Start Date:</strong> {selectedApplication.departure.date}</p>
-            <p><strong>End Date:</strong> {selectedApplication.arrival.date}</p>
-            <button className="close-button" onClick={closeDetails}>
-              Close
-            </button>
+                </thead>
+                <tbody>
+                  {groupedApplications[status].map((application) => (
+                    <tr key={application._id}>
+                      <td>{application.name}</td>
+                      <td>{application.regNo}</td>
+                      <td>
+                        <button
+                          className="view-button"
+                          onClick={() => handleViewDetails(application)}
+                        >
+                          View
+                        </button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            ) : (
+              <p className="no-applications">No {status.toLowerCase()} applications.</p>
+            )}
           </div>
-        </div>
-      )}
-    </div>
-    </div>
+        ))}
 
+        {/* Details Modal */}
+        {selectedApplication && (
+          <div className="details-modal">
+            <div className="modal-content">
+              <h2>Leave Application Details</h2>
+              <p><strong>Name:</strong> {selectedApplication.name}</p>
+              <p><strong>Registration Number:</strong> {selectedApplication.regNo}</p>
+              <p><strong>Branch:</strong> {selectedApplication.branch}</p>
+              <p><strong>Contact Number:</strong> {selectedApplication.phoneNum}</p>
+              <p><strong>Room Number:</strong> {selectedApplication.roomNum}</p>
+              <p><strong>Status:</strong> {selectedApplication.status}</p>
+              <p><strong>Reason:</strong> {selectedApplication.reasonOfLeave}</p>
+              <p><strong>Start Date:</strong> {selectedApplication.departure.date}</p>
+              <p><strong>End Date:</strong> {selectedApplication.arrival.date}</p>
+              <button className="close-button" onClick={closeDetails}>
+                Close
+              </button>
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 
