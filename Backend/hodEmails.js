@@ -4,7 +4,7 @@ const hodEmails = {
     Chem: "2021bcs054@sggs.ac.in",
     Civil: "hod_civil@example.com",
     Electrical: "hod_electrical@example.com",
-    Instru: "hod_instru@example.com",
+    Instru: "2021bcs054@sggs.ac.in",
     IT: "hod_it@example.com",
     Mech: "hod_mech@example.com",
     Textile: "hod_textile@example.com",

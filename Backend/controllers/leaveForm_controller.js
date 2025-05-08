@@ -69,8 +69,8 @@ const leaveForm = async (req, res) => {
       <p><strong>Arrival Date & Time:</strong> ${leaveFormData.arrival.date}, ${leaveFormData.arrival.time}</p>
       <br />
       <p>Please review the request and take an action:</p>
-      <a href="${approveApiUrl}">Accept</a> |
-      <a href="http://localhost:3000/reject/${leaveForm._id}?role=${recipient}?token=${token}">Reject as ${recipient}</a>
+      <a href="${approveApiUrl}">Accept</a> 
+      <a href="http://localhost:3000/reject/${leaveForm._id}?role=${recipient}&token=${token}">Reject as ${recipient}</a>
 
     `;
 

@@ -92,17 +92,13 @@ const LoginPage = () => {
               </a>
             </div>
           </div>
-          <div className="form-group remember-me">
-            <input type="checkbox" id="remember" />
-            <label htmlFor="remember">Remember me</label>
-          </div>
           <button type="submit" className="login-button">
             LOGIN
           </button>
         </form>
         <div className="signup-link">
           <p>
-            Don’t have an account? <a href="#">SIGN UP</a>
+            Don’t have an account? <a href="/SignupOptions">SIGN UP</a>
           </p>
         </div>
       </div>

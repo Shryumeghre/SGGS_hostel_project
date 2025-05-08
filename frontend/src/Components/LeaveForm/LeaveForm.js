@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState , useEffect } from "react";
 import "./LeaveForm.css";
 
 const LeaveForm = () => {
@@ -23,12 +23,58 @@ const LeaveForm = () => {
         parentsNum: "",
         recipient: "",
     });
+    const [errors, setErrors] = useState({
+        phoneNum: "",
+        parentsNum: "",
+        departureTime: "",
+        arrivalTime: "",
+        dateLogic: ""
+    });
       
+    useEffect(() => {
+        const { departure, arrival } = formData;
+        if (departure.date && arrival.date) {
+            const start = new Date(departure.date);
+            const end = new Date(arrival.date);
+            const diffTime = end - start;
+            const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+            if (!isNaN(diffDays) && diffDays >= 0) {
+                setFormData((prev) => ({ ...prev, durationOfLeave: diffDays.toString() }));
+            }
+        }
+    }, [formData.departure.date, formData.arrival.date]);
+    
+    useEffect(() => {
+        const { departure, arrival } = formData;
+        if (departure.date && arrival.date) {
+            const depDate = new Date(departure.date);
+            const arrDate = new Date(arrival.date);
+            if (arrDate < depDate) {
+                setErrors((prev) => ({
+                    ...prev,
+                    dateLogic: "Arrival date must be after or same as departure date.",
+                }));
+            } else {
+                setErrors((prev) => ({
+                    ...prev,
+                    dateLogic: "",
+                }));
+            }
+        }
+    }, [formData.departure.date, formData.arrival.date]);
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
+        const isValidTime = (time) => /^([01]\d|2[0-3]):[0-5]\d$/.test(time);
         
         if (name === "departureDate" || name === "departureTime") {
+            if (name === "departureTime") {
+                setErrors((prev) => ({
+                    ...prev,
+                    departureTime: isValidTime(value) ? "" : "Invalid time format (HH:mm).",
+                }));
+            }
           setFormData((prev) => ({
             ...prev,
             departure: {
@@ -49,6 +95,12 @@ const LeaveForm = () => {
             ...prev,
             [name]: value,
           }));
+          if (name === "phoneNum" || name === "parentsNum") {
+            setErrors((prev) => ({
+                ...prev,
+                [name]: value.length === 10 ? "" : "Phone number must be exactly 10 digits.",
+            }));
+        }
         }
       };
       
@@ -126,12 +178,10 @@ const LeaveForm = () => {
                 </label>
                 <label>Phone Number:
                     <input type="text" name="phoneNum" value={formData.phoneNum} onChange={handleChange} required />
+                    {errors.phoneNum && <h4 style={{ color: "red" }}>{errors.phoneNum}</h4>}
                 </label>
                 <label>Reason for Leave:
                     <textarea name="reasonOfLeave" value={formData.reasonOfLeave} onChange={handleChange} required />
-                </label>
-                <label>Duration of Leave:
-                    <input type="text" name="durationOfLeave" value={formData.durationOfLeave} onChange={handleChange} required />
                 </label>
                 <label>Departure Date:
                     <input type="date" name="departureDate" value={formData.departureDate} onChange={handleChange} required />
@@ -141,12 +191,17 @@ const LeaveForm = () => {
                 </label>
                 <label>Arrival Date:
                     <input type="date" name="arrivalDate" value={formData.arrivalDate} onChange={handleChange} required />
+                    {errors.dateLogic && <h4 style={{ color: "red" }}>{errors.dateLogic}</h4>}
                 </label>
                 <label>Arrival Time:
                     <input type="time" name="arrivalTime" value={formData.arrivalTime} onChange={handleChange} required />
                 </label>
+                <label>Duration of Leave:
+                    <input type="text" name="durationOfLeave" value={formData.durationOfLeave} onChange={handleChange} required />
+                </label>
                 <label>Parents' Contact Number:
                     <input type="text" name="parentsNum" value={formData.parentsNum} onChange={handleChange} required />
+                    {errors.parentsNum && <h4 style={{ color: "red" }}>{errors.parentsNum}</h4>}
                 </label>
                 <label>Recipient:
                     <select name="recipient" value={formData.recipient} onChange={handleChange} required>

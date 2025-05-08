@@ -42,16 +42,23 @@ const StatusTracker = () => {
     "Rejected by Rector-Warden"
   ];
 
- 
-  const statusIndexMap = {
-    "pending": 0,
-    "accepted by HOD": 1,
-    "Rejected by HOD": 2,
-    "leave granted": 3,
-    "Rejected by Rector-Warden": 4
+  const normalizedStatus = status.toLowerCase();
+  
+  const getFilteredSteps = (status) => {
+    if (status === "accepted by hod") {
+      return ["Pending", "Accepted by HOD" , "Leave Granted"];
+    } else if (status === "rejected by hod") {
+      return ["Pending", "Rejected by HOD"];
+    } else if (status === "leave granted") {
+      return ["Pending", "Accepted by HOD", "Leave Granted"];
+    } else if (status === "rejected by rector-warden") {
+      return ["Pending", "Accepted by HOD", "Rejected by Rector-Warden"];
+    } else {
+      return ["Pending","Accepted by HOD","Leave Granted"];
+    }
   };
-
-  const statusIndex = statusIndexMap[status] ?? -1;  
+  const filteredSteps = getFilteredSteps(normalizedStatus);
+  const activeStep = filteredSteps.findIndex(step => step.toLowerCase() === normalizedStatus);
 
   return (
     <Box sx={{ width: "100%", textAlign: "center", mt: 4 }}>
@@ -59,38 +66,33 @@ const StatusTracker = () => {
         Leave Form Status
       </Typography>
 
-      {statusIndex !== -1 ? (
-        <Stepper alternativeLabel>
-          {steps.map((label, index) => (
-            <Step key={label} active={index <= statusIndex}>
-              <StepLabel
-                sx={{
-                  "& .MuiStepLabel-label": {
-                    color:
-                      index < statusIndex
-                        ? "green"  // Completed steps in green
-                        : index === statusIndex
-                        ? status.includes("Rejected")
-                          ? "red"  // Rejected step in red
-                          : "green"  // Current accepted step in green
-                        : "gray", // Future steps in gray
-                  },
-                  "& .MuiStepConnector-line": {
-                    borderColor:
-                      index < statusIndex
-                        ? "green"  // Green line for completed steps
-                        : index === statusIndex
-                        ? status.includes("Rejected")
-                          ? "red"  // Red line if rejected
-                          : "green"  // Green line if accepted
-                        : "gray", // Gray for pending steps
-                  },
-                }}
-              >
-                {label}
-              </StepLabel>
-            </Step>
-          ))}
+      {activeStep !== -1 ? (
+        <Stepper alternativeLabel activeStep={activeStep}>
+          {filteredSteps.map((label, index) => {
+            let labelColor = "gray";
+            if (index < activeStep) {
+              labelColor = "green"; // Completed steps
+            } else if (index === activeStep) {
+              labelColor = status.toLowerCase().includes("rejected") ? "red" : "green"; // Current step
+            }
+
+            return (
+              <Step key={label}>
+                <StepLabel
+                  sx={{
+                    "& .MuiStepLabel-label": {
+                      color: labelColor,
+                    },
+                    "& .MuiStepConnector-line": {
+                      borderColor: labelColor,
+                    },
+                  }}
+                >
+                  {label}
+                </StepLabel>
+              </Step>
+            );
+          })}
         </Stepper>
       ) : (
         <Typography variant="body1" color="error">
@@ -100,5 +102,4 @@ const StatusTracker = () => {
     </Box>
   );
 };
-
 export default StatusTracker;
